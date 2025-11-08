@@ -13,15 +13,16 @@
         <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
 
-      <!-- Language Selector -->
+      <!-- languages  -->
       <button mat-button class="lang-btn" [matMenuTriggerFor]="langMenu">
-        En <mat-icon>keyboard_arrow_down</mat-icon>
+        {{ selectedLanguage.code.toUpperCase() }} <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
       <mat-menu #langMenu="matMenu">
-        <button mat-menu-item>English</button>
-        <button mat-menu-item>العربية</button>
+        <button mat-menu-item *ngFor="let lang of languages" (click)="onLanguageChange(lang)"
+          [class.active]="selectedLanguage.code === lang.code">
+          {{ lang.label }}
+        </button>
       </mat-menu>
-
       <!-- Favorites Button -->
       <button mat-icon-button class="favorites-btn">
         <mat-icon [matBadge]="favoritesCount" matBadgeColor="warn" matBadgeSize="small">
@@ -64,6 +65,7 @@
 <!-- Main Content with Padding -->
 <div class="main-content">
   <router-outlet></router-outlet>
+
 </div>
 <!-- ======================== -->
 <!-- Modern Footer -->
@@ -103,108 +105,108 @@
 
       <!-- Developers List (Horizontal) -->
       <!-- Developers List (Horizontal) -->
-<div class="developers-row">
-  <div class="dev-wrapper">
-    <div class="dev-item" (click)="toggleSocial('ahmed', $event)">
-      <mat-icon>person</mat-icon>
-      <span>Ahmed Fawzy</span>
-    </div>
-    <div class="social-links-dropdown" *ngIf="showSocial['ahmed']">
-      <a class="social-btn" href="https://linkedin.com" target="_blank">
-        <i class="bi bi-linkedin"></i>
-      </a>
-      <a class="social-btn" href="https://github.com" target="_blank">
-        <i class="bi bi-github"></i>
-      </a>
-    </div>
-  </div>
+      <div class="developers-row">
+        <div class="dev-wrapper">
+          <div class="dev-item" (click)="toggleSocial('ahmed', $event)">
+            <mat-icon>person</mat-icon>
+            <span>Ahmed Fawzy</span>
+          </div>
+          <div class="social-links-dropdown" *ngIf="showSocial['ahmed']">
+            <a class="social-btn" href="https://linkedin.com" target="_blank">
+              <i class="bi bi-linkedin"></i>
+            </a>
+            <a class="social-btn" href="https://github.com" target="_blank">
+              <i class="bi bi-github"></i>
+            </a>
+          </div>
+        </div>
 
-  <div class="dev-wrapper">
-    <div class="dev-item" (click)="toggleSocial('andrew', $event)">
-      <mat-icon>person</mat-icon>
-      <span>Andrew Nassim</span>
-    </div>
-    <div class="social-links-dropdown" *ngIf="showSocial['andrew']">
-      <a class="social-btn" href="https://linkedin.com" target="_blank">
-        <i class="bi bi-linkedin"></i>
-      </a>
-      <a class="social-btn" href="https://github.com" target="_blank">
-        <i class="bi bi-github"></i>
-      </a>
-    </div>
-  </div>
+        <div class="dev-wrapper">
+          <div class="dev-item" (click)="toggleSocial('andrew', $event)">
+            <mat-icon>person</mat-icon>
+            <span>Andrew Nassim</span>
+          </div>
+          <div class="social-links-dropdown" *ngIf="showSocial['andrew']">
+            <a class="social-btn" href="https://linkedin.com" target="_blank">
+              <i class="bi bi-linkedin"></i>
+            </a>
+            <a class="social-btn" href="https://github.com" target="_blank">
+              <i class="bi bi-github"></i>
+            </a>
+          </div>
+        </div>
 
-  <div class="dev-wrapper">
-    <div class="dev-item" (click)="toggleSocial('hesham', $event)">
-      <mat-icon>person</mat-icon>
-      <span>Hesham Ahmed</span>
-    </div>
-    <div class="social-links-dropdown" *ngIf="showSocial['hesham']">
-      <a class="social-btn" href="https://linkedin.com" target="_blank">
-        <i class="bi bi-linkedin"></i>
-      </a>
-      <a class="social-btn" href="https://github.com" target="_blank">
-        <i class="bi bi-github"></i>
-      </a>
-    </div>
-  </div>
+        <div class="dev-wrapper">
+          <div class="dev-item" (click)="toggleSocial('hesham', $event)">
+            <mat-icon>person</mat-icon>
+            <span>Hesham Ahmed</span>
+          </div>
+          <div class="social-links-dropdown" *ngIf="showSocial['hesham']">
+            <a class="social-btn" href="https://linkedin.com" target="_blank">
+              <i class="bi bi-linkedin"></i>
+            </a>
+            <a class="social-btn" href="https://github.com" target="_blank">
+              <i class="bi bi-github"></i>
+            </a>
+          </div>
+        </div>
 
-  <div class="dev-wrapper">
-    <div class="dev-item" (click)="toggleSocial('mohamed-g', $event)">
-      <mat-icon>person</mat-icon>
-      <span>Mohamed Galal</span>
-    </div>
-    <div class="social-links-dropdown" *ngIf="showSocial['mohamed-g']">
-      <a class="social-btn" href="https://linkedin.com" target="_blank">
-        <i class="bi bi-linkedin"></i>
-      </a>
-      <a class="social-btn" href="https://github.com" target="_blank">
-        <i class="bi bi-github"></i>
-      </a>
-    </div>
-  </div>
+        <div class="dev-wrapper">
+          <div class="dev-item" (click)="toggleSocial('mohamed-g', $event)">
+            <mat-icon>person</mat-icon>
+            <span>Mohamed Galal</span>
+          </div>
+          <div class="social-links-dropdown" *ngIf="showSocial['mohamed-g']">
+            <a class="social-btn" href="https://linkedin.com" target="_blank">
+              <i class="bi bi-linkedin"></i>
+            </a>
+            <a class="social-btn" href="https://github.com" target="_blank">
+              <i class="bi bi-github"></i>
+            </a>
+          </div>
+        </div>
 
-  <div class="dev-wrapper">
-    <div class="dev-item" (click)="toggleSocial('mohamed-n', $event)">
-      <mat-icon>person</mat-icon>
-      <span>Mohamed Nasser</span>
-    </div>
-    <div class="social-links-dropdown" *ngIf="showSocial['mohamed-n']">
-      <a class="social-btn" href="https://linkedin.com" target="_blank">
-        <i class="bi bi-linkedin"></i>
-      </a>
-      <a class="social-btn" href="https://github.com" target="_blank">
-        <i class="bi bi-github"></i>
-      </a>
-    </div>
-  </div>
-</div>
+        <div class="dev-wrapper">
+          <div class="dev-item" (click)="toggleSocial('mohamed-n', $event)">
+            <mat-icon>person</mat-icon>
+            <span>Mohamed Nasser</span>
+          </div>
+          <div class="social-links-dropdown" *ngIf="showSocial['mohamed-n']">
+            <a class="social-btn" href="https://linkedin.com" target="_blank">
+              <i class="bi bi-linkedin"></i>
+            </a>
+            <a class="social-btn" href="https://github.com" target="_blank">
+              <i class="bi bi-github"></i>
+            </a>
+          </div>
+        </div>
+      </div>
 
-<!-- Supervisor Section -->
-<div class="supervisor-section">
-  <p class="supervisor-label">Supervised by</p>
-  <div class="supervisor-wrapper">
-    <div class="dev-item" (click)="toggleSocial('hassan', $event)">
-      <mat-icon>person</mat-icon>
-      <span>Hassan Eldash</span>
-    </div>
-    <div class="social-links-dropdown" *ngIf="showSocial['hassan']">
-      <a class="social-btn" href="https://linkedin.com" target="_blank">
-        <i class="bi bi-linkedin"></i>
-      </a>
-      <a class="social-btn" href="https://github.com" target="_blank">
-        <i class="bi bi-github"></i>
-      </a>
-    </div>
-  </div>
-</div>
+      <!-- Supervisor Section -->
+      <div class="supervisor-section">
+        <p class="supervisor-label">Supervised by</p>
+        <div class="supervisor-wrapper">
+          <div class="dev-item" (click)="toggleSocial('hassan', $event)">
+            <mat-icon>person</mat-icon>
+            <span>Hassan Eldash</span>
+          </div>
+          <div class="social-links-dropdown" *ngIf="showSocial['hassan']">
+            <a class="social-btn" href="https://linkedin.com" target="_blank">
+              <i class="bi bi-linkedin"></i>
+            </a>
+            <a class="social-btn" href="https://github.com" target="_blank">
+              <i class="bi bi-github"></i>
+            </a>
+          </div>
+        </div>
+      </div>
 
     </div>
 
     <!-- Copyright -->
     <div class="footer-bottom">
       <p class="copyright-text">
-        © {{ currentYear }} Movie App. Made with 
+        © {{ currentYear }} Movie App. Made with
         <mat-icon class="heart-icon">favorite</mat-icon>
       </p>
     </div>

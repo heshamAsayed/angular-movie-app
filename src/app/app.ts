@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDividerModule } from '@angular/material/divider';
+import { MovieDisplay } from './services/Display/movie-display';
 
 @Component({
   selector: 'app-root',
@@ -79,5 +80,34 @@ export class App {
   }
 
 
-  
+
+
+
+  // languages array 
+   languages = [
+  { code: 'en', label: 'English' },
+  { code: 'ar', label: 'Arabic' },
+  { code: 'fr', label: 'French' },
+  { code: 'zh', label: 'Chinese' }
+];
+
+// Use last selected language from LocalStorage or default to first
+selectedLanguage = this.languages.find(l => l.code === localStorage.getItem('selectedLanguage')) || this.languages[0];
+
+constructor(private movieDisplay: MovieDisplay) {
+  // Initialize service with selected language
+  this.movieDisplay.setLanguage(this.selectedLanguage.code);
+}
+
+onLanguageChange(language: any) {
+  this.selectedLanguage = language;
+
+  // Save language in LocalStorage
+  localStorage.setItem('selectedLanguage', language.code);
+
+  // Send language to service
+  this.movieDisplay.setLanguage(language.code);
+}
+
+      
 }
