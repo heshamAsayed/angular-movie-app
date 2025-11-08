@@ -1,4 +1,4 @@
-import { Component, signal , HostListener} from '@angular/core';
+import { Component, signal, HostListener } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
@@ -39,16 +39,10 @@ export class App {
   isLoggedIn = false;
   favoritesCount = 3;
   currentYear = new Date().getFullYear();
-  isDarkMode = false;
+  public readonly isDarkMode = signal(localStorage.getItem('darkMode') === 'true');
 
-  login = () => this.isLoggedIn = true;
-  logout = () => this.isLoggedIn = false;
-  toggleTheme = () => this.isDarkMode = !this.isDarkMode;
-
-
-
-
- showSocial: { [key: string]: boolean } = {
+  /* cspell:disable */
+  showSocial: { [key: string]: boolean } = {
     'ahmed': false,
     'andrew': false,
     'hesham': false,
@@ -56,58 +50,60 @@ export class App {
     'mohamed-n': false,
     'hassan': false
   };
+  /* cspell:enable */
+
+  // languages array 
+  languages = [
+    { code: 'en', label: 'English' },
+    { code: 'ar', label: 'Arabic' },
+    { code: 'fr', label: 'French' },
+    { code: 'zh', label: 'Chinese' }
+  ];
+
+  // Use last selected language from LocalStorage or default to first
+  selectedLanguage = this.languages.find(l => l.code === localStorage.getItem('selectedLanguage')) || this.languages[0];
+
+  constructor(private movieDisplay: MovieDisplay) {
+    // Apply initial theme
+    this.applyTheme(this.isDarkMode());
+
+    // Initialize service with selected language
+    this.movieDisplay.setLanguage(this.selectedLanguage.code);
+  }
+
+  login = () => this.isLoggedIn = true;
+  logout = () => this.isLoggedIn = false;
+
+  toggleTheme = () => {
+    this.isDarkMode.update(dark => !dark);
+    this.applyTheme(this.isDarkMode());
+    localStorage.setItem('darkMode', this.isDarkMode().toString());
+  }
+
+  private applyTheme(isDark: boolean) {
+    document.body.classList.toggle('dark-mode', isDark);
+  }
 
   toggleSocial(devName: string, event: Event) {
     event.stopPropagation();
-    
-    // Close all other social links
     Object.keys(this.showSocial).forEach(key => {
       if (key !== devName) {
         this.showSocial[key] = false;
       }
     });
-    
-    // Toggle current one
     this.showSocial[devName] = !this.showSocial[devName];
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
-    // Close all social links when clicking anywhere
     Object.keys(this.showSocial).forEach(key => {
       this.showSocial[key] = false;
     });
   }
 
-
-
-
-
-  // languages array 
-   languages = [
-  { code: 'en', label: 'English' },
-  { code: 'ar', label: 'Arabic' },
-  { code: 'fr', label: 'French' },
-  { code: 'zh', label: 'Chinese' }
-];
-
-// Use last selected language from LocalStorage or default to first
-selectedLanguage = this.languages.find(l => l.code === localStorage.getItem('selectedLanguage')) || this.languages[0];
-
-constructor(private movieDisplay: MovieDisplay) {
-  // Initialize service with selected language
-  this.movieDisplay.setLanguage(this.selectedLanguage.code);
-}
-
-onLanguageChange(language: any) {
-  this.selectedLanguage = language;
-
-  // Save language in LocalStorage
-  localStorage.setItem('selectedLanguage', language.code);
-
-  // Send language to service
-  this.movieDisplay.setLanguage(language.code);
-}
-
-      
+  onLanguageChange(language: any) {
+    this.selectedLanguage = language;
+    localStorage.setItem('selectedLanguage', language.code);
+    this.movieDisplay.setLanguage(language.code);
+  }
 }

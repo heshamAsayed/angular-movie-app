@@ -1,4 +1,4 @@
-<mat-toolbar class="navbar" [class.dark-mode]="isDarkMode">
+<mat-toolbar class="navbar" [class.dark-mode]="isDarkMode()">
   <div class="navbar-container">
     <!-- Logo Section - Left -->
     <div class="logo-section">
@@ -10,7 +10,7 @@
     <div class="nav-actions">
       <!-- Theme Toggle -->
       <button mat-icon-button class="theme-toggle" (click)="toggleTheme()">
-        <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        <mat-icon>{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
 
       <!-- languages  -->
@@ -70,7 +70,7 @@
 <!-- ======================== -->
 <!-- Modern Footer -->
 <!-- ======================== -->
-<footer class="footer" [class.dark-mode]="isDarkMode">
+<footer class="footer" [class.dark-mode]="isDarkMode()">
   <div class="container">
     <div class="footer-content">
       <!-- First Row: Logo & Quick Links -->
