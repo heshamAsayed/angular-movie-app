@@ -1,0 +1,76 @@
+<div class="details-page" *ngIf="movie; else loading">
+    <div class="details-card">
+        <button class="back-btn" mat-stroked-button color="primary" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Back
+        </button>
+
+        <div class="card-content">
+            <div class="poster">
+                <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" [alt]="movie.title"
+                    (error)="$event.target.src='assets/no-poster.jpg'"
+                    style="width:200px; height:auto; border-radius: 10px; object-fit: cover;">
+                <div class="rating-badge">
+                    <mat-icon>star</mat-icon>
+                    <span>{{ movie.vote_average | number: '1.1-1' }}</span>
+                </div>
+            </div>
+
+            <div class="info">
+                <h1 class="title">{{ movie.title }} <span class="year">({{ movie.release_date | date:'yyyy' }})</span>
+                </h1>
+                <p class="tagline" *ngIf="movie.tagline">{{ movie.tagline }}</p>
+
+                <div class="meta-row">
+                    <div class="meta-item" *ngIf="movie.release_date">
+                        <strong>Release</strong>
+                        <div class="meta-value">{{ movie.release_date | date:'mediumDate' }}</div>
+                    </div>
+
+                    <div class="meta-item" *ngIf="movie.runtime">
+                        <strong>Runtime</strong>
+                        <div class="meta-value">{{ movie.runtime }} min</div>
+                    </div>
+
+                    <div class="meta-item">
+                        <strong>Votes</strong>
+                        <div class="meta-value">{{ movie.vote_count | number }}</div>
+                    </div>
+                </div>
+
+                <div class="genres" *ngIf="movie.genres?.length">
+                    <span class="genre" *ngFor="let g of movie.genres">{{ g.name }}</span>
+                </div>
+
+                <h3 class="section-title">Overview</h3>
+                <p class="overview">{{ movie.overview }}</p>
+
+                <div class="extra-row">
+                    <div class="popularity">
+                        <strong>Popularity</strong>
+                        <div class="meta-value">{{ movie.popularity | number:'1.0-0' }}</div>
+                    </div>
+                </div>
+
+
+                <ng-container *ngIf="trailerUrl">
+                    <h3 class="section-title">Trailer</h3>
+                    <div class="video-wrapper">
+                        <div class="cinema-frame">
+                            <div class="screen">
+                                <iframe [src]="trailerUrl" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen title="Movie Trailer">
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #loading>
+    <div class="loading">Loading details...</div>
+</ng-template>
