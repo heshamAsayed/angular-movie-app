@@ -1,0 +1,32 @@
+<div class="auth-page">
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+    <h2>Login</h2>
+
+    <label class="field">
+      <span>Email</span>
+      <input type="email" formControlName="email" placeholder="you@example.com" />
+    </label>
+    <div class="error" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+      <div *ngIf="form.get('email')?.errors?.['required']">Email is required.</div>
+      <div *ngIf="form.get('email')?.errors?.['email']">Enter a valid email.</div>
+    </div>
+
+    <label class="field">
+      <span>Password</span>
+      <input type="password" formControlName="password" placeholder="Minimum 6 characters" />
+    </label>
+    <div class="error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+      <div *ngIf="form.get('password')?.errors?.['required']">Password is required.</div>
+      <div *ngIf="form.get('password')?.errors?.['minlength']">Minimum 6 characters.</div>
+    </div>
+
+    <button type="submit" class="primary" [disabled]="loading">{{ loading ? 'Signing in...' : 'Sign in' }}</button>
+
+    <div class="links">
+      <span>Don't have an account?</span>
+      <a [routerLink]="['/register']">Register</a>
+    </div>
+
+    <div class="error server" *ngIf="error">{{ error }}</div>
+  </form>
+</div>
