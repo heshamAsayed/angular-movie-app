@@ -141,6 +141,22 @@ $dark-theme: mat.define-theme((
 ));
 
 :root {
+   --primary-color: #d92a00;
+    --primary-dark: #a82000;
+    --surface-bg: #0a0e27;
+    --card-bg: #1a1f3a;
+    --card-hover-bg: #252d4a;
+    --primary-text: #ffffff;
+    --secondary-text: #b0b0b0;
+    --muted-text: #808080;
+    --rating-high: #4caf50;
+    --rating-medium: #ffeb3b;
+    --rating-low: #f44336;
+    --card-border: rgba(217, 42, 0, 0.2);
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    --card-hover-shadow: 0 12px 40px rgba(217, 42, 0, 0.4);
+    --navbar-bg: #0a0e27;
+    --navbar-border: rgba(217, 42, 0, 0.3);
   // Include light theme by default
   @include mat.all-component-themes($light-theme);
   
@@ -171,10 +187,10 @@ $dark-theme: mat.define-theme((
   --card-hover-shadow: 0 8px 24px rgba(21, 101, 192, 0.2);
   
   // Navbar Colors - Strong Contrast
-  --navbar-bg: #1565c0;
-  --navbar-text: #ffffff;
+  --navbar-bg: transparent;
+  --navbar-text: black;
   --navbar-hover: #ffffff;
-  --navbar-active: #ffffff;
+  --navbar-active: rgba(21, 101, 192, 0.2);
   
   // Footer Colors - Clear & Visible
   --footer-bg: #1565c0;
