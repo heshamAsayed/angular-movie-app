@@ -44,6 +44,7 @@ export class MoveList implements OnInit {
     this.isLoading$ = this.movieDisplay.isLoading$;
     this.currentPage$ = this.movieDisplay.currentPage$;
     this.totalPages$ = this.movieDisplay.totalPages$;
+    
   }
 
   ngOnInit(): void {
