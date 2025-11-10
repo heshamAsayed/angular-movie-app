@@ -47,10 +47,12 @@
       <div class="movie-poster">
         <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" 
              [alt]="movie.title"
-             (error)="$event.target.src='assets/no-poster.jpg'">
+             (error)="$event.target.src='assets/no-poster.jpg'"style="width:300px; height:auto; border-radius: 10px; object-fit: cover;">
         
         <!-- Rating Badge -->
-        <div class="rating-badge" [class.high-rating]="movie.vote_average >= 7">
+        <div class="rating-badge" [class.high-rating]="movie.vote_average >= 7" 
+             [class.medium-rating]="movie.vote_average >= 5 && movie.vote_average < 7"
+             [class.low-rating]="movie.vote_average < 5">
           <mat-icon>star</mat-icon>
           <span>{{ movie.vote_average | number: '1.1-1' }}</span>
         </div>

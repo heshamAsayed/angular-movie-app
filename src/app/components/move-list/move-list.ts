@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { MovieDisplay } from '../../services/Display/movie-display';
 
 @Component({
@@ -38,7 +39,7 @@ export class MoveList implements OnInit {
   selectedGenre: number | null = null;
   watchlist: Set<number> = new Set();
 
-  constructor(private movieDisplay: MovieDisplay) {
+  constructor(private movieDisplay: MovieDisplay, private router: Router){
     this.movies$ = this.movieDisplay.movies$;
     this.genres$ = this.movieDisplay.genres$;
     this.isLoading$ = this.movieDisplay.isLoading$;
@@ -86,8 +87,10 @@ export class MoveList implements OnInit {
 
   viewDetails(movie: any) {
     console.log('View details:', movie);
-    // TODO: Navigate to movie details page
-    // this.router.navigate(['/movie', movie.id]);
+    // Navigate to movie details page
+    if (movie && movie.id) {
+      this.router.navigate(['/details', movie.id]);
+    }
   }
 
   private loadWatchlist() {
