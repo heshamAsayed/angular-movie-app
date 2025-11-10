@@ -8,16 +8,24 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { Location } from '@angular/common';
+import { Movie } from '../../models/Movie/movie-module';
+import { Genre } from '../../models/genre/genre-module';
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatDividerModule, MatCardModule],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+    MatCardModule
+  ],
   templateUrl: './details.html',
   styleUrls: ['./details.css']
 })
 export class Details implements OnInit {
-  movie: any = null;
+  movie: Movie | null = null; // Use Movie interface
   isLoading = false;
   trailerUrl: SafeResourceUrl | null = null;
 
@@ -30,29 +38,31 @@ export class Details implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // ✅ Get movie ID from route parameters
     const idParam = this.route.snapshot.paramMap.get('id');
     const id = idParam ? +idParam : null;
 
-    // ✅ لو مفيش id، رجّع المستخدم لقائمة الأفلام
+    // ✅ Redirect to movies list if ID is not available
     if (!id) {
       this.router.navigate(['/movies']);
       return;
     }
 
-    // ✅ اشترك في اللغة وحمّل الفيلم كل ما اللغة تتغير
+    // ✅ Subscribe to language changes and reload movie on language change
     this.movieDisplay.language$.subscribe(lang => {
       this.loadMovie(id, lang);
     });
   }
 
-  // ✅ دالة تحميل الفيلم من MovieDisplay
+  /** Load movie details from MovieDisplay service */
   private loadMovie(id: number, lang: string): void {
     this.isLoading = true;
 
     this.movieDisplay.getMovieByIdWithVideos(id, lang).subscribe({
-      next: (res) => {
+      next: (res: Movie) => {
         this.movie = res;
 
+        // ✅ Set trailer URL if YouTube video is available
         if (res.videos?.results?.length && res.videos.results[0]?.site === 'YouTube') {
           this.trailerUrl = this.getTrailerUrl(res.videos.results[0].key);
         } else {
@@ -68,10 +78,12 @@ export class Details implements OnInit {
     });
   }
 
+  /** Navigate back to previous page */
   goBack(): void {
     this.location.back();
   }
 
+  /** Convert video key to SafeResourceUrl for embedding */
   private getTrailerUrl(videoKey: string): SafeResourceUrl {
     const url = `https://www.youtube.com/embed/${videoKey}`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);

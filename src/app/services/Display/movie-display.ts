@@ -2,16 +2,18 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { API } from '../server/api';
+import { Movie } from '../../models/Movie/movie-module'; 
+import { Genre } from '../../models/genre/genre-module'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class MovieDisplay {
   // Observables
-  private moviesSubject = new BehaviorSubject<any[]>([]);
+  private moviesSubject = new BehaviorSubject<Movie[]>([]);
   public movies$ = this.moviesSubject.asObservable();
 
-  private genresSubject = new BehaviorSubject<any[]>([]);
+  private genresSubject = new BehaviorSubject<Genre[]>([]);
   public genres$ = this.genresSubject.asObservable();
 
   private languageSubject: BehaviorSubject<string>;
@@ -29,33 +31,33 @@ export class MovieDisplay {
   private selectedGenreSubject = new BehaviorSubject<number | null>(null);
   public selectedGenre$ = this.selectedGenreSubject.asObservable();
 
-  private allMovies: any[] = [];
+  private allMovies: Movie[] = [];
 
   constructor(private api: API) {
-  const savedLang = localStorage.getItem('selectedLanguage') || 'en';
-  this.languageSubject = new BehaviorSubject<string>(savedLang);
-  this.language$ = this.languageSubject.asObservable();
+    const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+    this.languageSubject = new BehaviorSubject<string>(savedLang);
+    this.language$ = this.languageSubject.asObservable();
 
-  // When the language changes, it reloads the same page.
-  this.language$.subscribe((lang) => {
-    this.loadGenres();
-    this.loadMovies(this.currentPageSubject.value);
-  });
-}
+    // Reload genres and movies when language changes
+    this.language$.subscribe((lang) => {
+      this.loadGenres();
+      this.loadMovies(this.currentPageSubject.value);
+    });
+  }
 
   /** 
-   * Set language for UI only.
-   * Does NOT reload movies or genres automatically.
+   * Set language for UI only
+   * Does NOT reload movies or genres automatically
    */
-setLanguage(lang: string) {
-  this.languageSubject.next(lang);
-  localStorage.setItem('selectedLanguage', lang);
-}
+  setLanguage(lang: string) {
+    this.languageSubject.next(lang);
+    localStorage.setItem('selectedLanguage', lang);
+  }
 
   /** Set selected genre and reset page to 1 */
   setGenre(genreId: number | null) {
     this.selectedGenreSubject.next(genreId);
-    this.loadMovies(1); // reset to first page when genre changes
+    this.loadMovies(1); // Reset to first page when genre changes
   }
 
   /** Fetch movies manually, uses current language and selected genre */
@@ -109,10 +111,9 @@ setLanguage(lang: string) {
     }
   }
 
-
+  /** Get a single movie by ID, optionally using a specific language */
   getMovieByIdWithVideos(id: number, lang?: string) {
-  const language = lang || this.languageSubject.value;
-  return this.api.getMovieByIdWithVideos(id, language);
-}
-
+    const language = lang || this.languageSubject.value;
+    return this.api.getMovieByIdWithVideos(id, language);
+  }
 }

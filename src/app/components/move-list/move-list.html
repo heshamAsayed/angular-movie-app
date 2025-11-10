@@ -1,45 +1,45 @@
-<!-- HTML Template -->
 <div class="movies-page">
+
   <!-- Hero Section with Controls -->
   <div class="hero-section">
-  <!-- Video Background -->
-  <div class="hero-video-background">
-    <app-autoplay-videos></app-autoplay-videos>
-    <div class="hero-overlay"></div>
-  </div>
+    <!-- Video Background -->
+    <div class="hero-video-background">
+      <app-autoplay-videos></app-autoplay-videos>
+      <div class="hero-overlay"></div>
+    </div>
 
-  <!-- Hero Content -->
-  <div class="hero-content">
-    <h1 class="hero-title">Discover Movies</h1>
-    <p class="hero-subtitle">Explore millions of movies and TV shows</p>
-    
-    <div class="controls">
-      <!-- Search by title -->
-      <div class="control-item search-control">
-        <mat-form-field appearance="outline" class="large-field">
-          <mat-label>Search Movies</mat-label>
-          <input matInput type="text" placeholder="Search for movies, TV shows..." 
-                 (input)="searchByTitle($event.target.value)">
-          <mat-icon matPrefix>search</mat-icon>
-        </mat-form-field>
-      </div>
+    <!-- Hero Content -->
+    <div class="hero-content">
+      <h1 class="hero-title">Discover Movies</h1>
+      <p class="hero-subtitle">Explore millions of movies and TV shows</p>
+      
+      <div class="controls">
+        <!-- Search by title -->
+        <div class="control-item search-control">
+          <mat-form-field appearance="outline" class="large-field">
+            <mat-label>Search Movies</mat-label>
+            <input matInput type="text" placeholder="Search for movies, TV shows..." 
+                   (input)="searchByTitle($event.target.value)">
+            <mat-icon matPrefix>search</mat-icon>
+          </mat-form-field>
+        </div>
 
-      <!-- Genre Selector -->
-      <div class="control-item genre-control">
-        <mat-form-field appearance="outline" class="large-field">
-          <mat-label>Genre</mat-label>
-          <mat-select (selectionChange)="onGenreChange($event.value)">
-            <mat-option value="">All Genres</mat-option>
-            <mat-option *ngFor="let genre of genres$ | async" [value]="genre.id">
-              {{ genre.name }}
-            </mat-option>
-          </mat-select>
-          <mat-icon matPrefix>category</mat-icon>
-        </mat-form-field>
+        <!-- Genre Selector -->
+        <div class="control-item genre-control">
+          <mat-form-field appearance="outline" class="large-field">
+            <mat-label>Genre</mat-label>
+            <mat-select (selectionChange)="onGenreChange($event.value)">
+              <mat-option value="">All Genres</mat-option>
+              <mat-option *ngFor="let genre of genres$ | async" [value]="genre?.id ?? null">
+                {{ genre?.name ?? 'Unknown' }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>category</mat-icon>
+          </mat-form-field>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <!-- Spinner -->
   <div *ngIf="isLoading$ | async" class="spinner-container">
@@ -52,56 +52,58 @@
     <div class="movie-card" *ngFor="let movie of movies$ | async">
       <!-- Poster Image -->
       <div class="movie-poster">
-        <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" 
-             [alt]="movie.title"
-             (error)="$event.target.src='assets/no-poster.jpg'"style="width:300px; height:auto; border-radius: 10px; object-fit: cover;">
+        <img [src]="'https://image.tmdb.org/t/p/w500' + (movie?.poster_path ?? '')" 
+             [alt]="movie?.title ?? ''"
+             (error)="$event.target.src='assets/no-poster.jpg'" 
+             style="width:300px; height:auto; border-radius: 10px; object-fit: cover;">
         
         <!-- Rating Badge -->
-        <div class="rating-badge" [class.high-rating]="movie.vote_average >= 7" 
-             [class.medium-rating]="movie.vote_average >= 5 && movie.vote_average < 7"
-             [class.low-rating]="movie.vote_average < 5">
+        <div class="rating-badge" 
+             [class.high-rating]="(movie?.vote_average ?? 0) >= 7" 
+             [class.medium-rating]="(movie?.vote_average ?? 0) >= 5 && (movie?.vote_average ?? 0) < 7"
+             [class.low-rating]="(movie?.vote_average ?? 0) < 5">
           <mat-icon>star</mat-icon>
-          <span>{{ movie.vote_average | number: '1.1-1' }}</span>
+          <span>{{ (movie?.vote_average ?? 0) | number: '1.1-1' }}</span>
         </div>
 
         <!-- Adult Badge -->
-        <div class="adult-badge" *ngIf="movie.adult">18+</div>
+        <div class="adult-badge" *ngIf="movie?.adult">18+</div>
       </div>
 
       <!-- Movie Info -->
       <div class="movie-info">
-        <h3 class="movie-title" [title]="movie.title">{{ movie.title }}</h3>
+        <h3 class="movie-title" [title]="movie?.title ?? ''">{{ movie?.title ?? '' }}</h3>
         
         <div class="movie-meta">
           <span class="release-date">
             <mat-icon>calendar_today</mat-icon>
-            {{ movie.release_date | date: 'yyyy' }}
+            {{ movie?.release_date | date: 'yyyy' }}
           </span>
           <span class="popularity">
             <mat-icon>trending_up</mat-icon>
-            {{ movie.popularity | number: '1.0-0' }}
+            {{ movie?.popularity | number: '1.0-0' }}
           </span>
         </div>
 
-        <p class="movie-overview">{{ movie.overview }}</p>
+        <p class="movie-overview">{{ movie?.overview ?? '' }}</p>
 
         <div class="movie-stats">
           <div class="stat-item">
             <span class="stat-label">Rating</span>
             <div class="rating-bar">
               <div class="rating-fill" 
-                   [style.width.%]="(movie.vote_average / 10) * 100"
-                   [class.high]="movie.vote_average >= 7"
-                   [class.medium]="movie.vote_average >= 5 && movie.vote_average < 7"
-                   [class.low]="movie.vote_average < 5">
+                   [style.width.%]="((movie?.vote_average ?? 0) / 10) * 100"
+                   [class.high]="(movie?.vote_average ?? 0) >= 7"
+                   [class.medium]="(movie?.vote_average ?? 0) >= 5 && (movie?.vote_average ?? 0) < 7"
+                   [class.low]="(movie?.vote_average ?? 0) < 5">
               </div>
             </div>
-            <span class="rating-text">{{ movie.vote_average }}/10</span>
+            <span class="rating-text">{{ movie?.vote_average ?? 0 }}/10</span>
           </div>
           
           <div class="stat-item">
             <span class="stat-label">Votes</span>
-            <span class="stat-value">{{ movie.vote_count | number }}</span>
+            <span class="stat-value">{{ movie?.vote_count ?? 0 | number }}</span>
           </div>
         </div>
 
@@ -109,16 +111,17 @@
         <div class="movie-actions">
           <button mat-icon-button 
                   class="watchlist-btn"
-                  [class.in-watchlist]="isInWatchlist(movie.id)"
+                  [class.in-watchlist]="isInWatchlist(movie?.id ?? 0)"
                   (click)="toggleWatchlist(movie)"
-                  [matTooltip]="isInWatchlist(movie.id) ? 'Remove from Watchlist' : 'Add to Watchlist'">
-            <mat-icon>{{ isInWatchlist(movie.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
+                  [matTooltip]="isInWatchlist(movie?.id ?? 0) ? 'Remove from Watchlist' : 'Add to Watchlist'">
+            <mat-icon>{{ isInWatchlist(movie?.id ?? 0) ? 'favorite' : 'favorite_border' }}</mat-icon>
           </button>
-          
-          <button mat-stroked-button color="primary" (click)="viewDetails(movie)">
-            <mat-icon>info</mat-icon>
-            Details
-          </button>
+          <button mat-stroked-button color="primary" 
+        (click)="movie && movie.id ? viewDetails(movie) : null">
+  <mat-icon>info</mat-icon>
+  Details
+</button>
+
         </div>
       </div>
     </div>
@@ -132,8 +135,7 @@
   </div>
 
   <!-- Pagination -->
-  <!-- <div class="pagination" *ngIf="!(isLoading$ | async) && (movies$ | async)?.length > 0"> -->
-    <div class="pagination" *ngIf="!(isLoading$ | async) && ((movies$ | async)?.length ?? 0) > 0">
+  <div class="pagination" *ngIf="!(isLoading$ | async) && ((movies$ | async)?.length ?? 0) > 0">
     <button mat-button 
             (click)="prevPage()" 
             [disabled]="(currentPage$ | async) === 1">

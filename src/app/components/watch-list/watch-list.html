@@ -1,7 +1,5 @@
 <div class="watchlist-container container-fluid mt-4 mb-5 px-3 px-md-4">
 
-
-
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-wrapper">
     <div class="spinner-border" role="status" style="color: var(--primary-color);">
@@ -22,7 +20,6 @@
       Browse Movies
     </a>
   </div>
-
 
   <!-- Watchlist Content -->
   <div *ngIf="!isLoading && watchlistMovies.length > 0">
@@ -46,15 +43,16 @@
         <span>Back to Movies</span>
       </a>
     </div>
+
     <!-- Movies Grid -->
     <div class="movies-grid">
       <div *ngFor="let movie of watchlistMovies; let i = index" class="movie-card-wrapper">
         <div class="movie-card">
           <!-- Poster Section -->
           <div class="movie-poster-wrapper">
-            <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" [alt]="movie.title" class="movie-poster"
+            <img [src]="'https://image.tmdb.org/t/p/w500' + (movie?.poster_path ?? '')" [alt]="movie?.title ?? ''" class="movie-poster"
               loading="lazy" />
-            <button (click)="removeMovie(movie.id)" class="btn-remove" title="Remove from watchlist">
+            <button (click)="removeMovie(movie?.id ?? 0)" class="btn-remove" title="Remove from watchlist">
               <i class="fas fa-trash-alt"></i>
             </button>
           </div>
@@ -63,28 +61,28 @@
           <div class="movie-content">
             <!-- Title & Rating -->
             <div class="movie-header">
-              <h3 class="movie-title">{{ movie.title }}</h3>
+              <h3 class="movie-title">{{ movie?.title ?? 'Untitled' }}</h3>
               <div class="rating-badge">
                 <i class="fas fa-star"></i>
-                <span>{{ movie.vote_average.toFixed(1) }}</span>
+                <span>{{ (movie?.vote_average ?? 0).toFixed(1) }}</span>
               </div>
             </div>
 
             <!-- Overview -->
             <p class="movie-overview">
-              {{ movie.overview.length > 120 ? (movie.overview | slice:0:120) + '...' : movie.overview }}
+              {{ (movie?.overview ?? '').length > 120 ? ((movie?.overview ?? '') | slice:0:120) + '...' : (movie?.overview ?? '') }}
             </p>
 
             <!-- Meta Information -->
             <div class="movie-meta">
               <div class="meta-item">
                 <i class="far fa-calendar"></i>
-                <span>{{ movie.release_date | date: 'MMM d, yyyy' }}</span>
+                <span>{{ movie?.release_date | date: 'MMM d, yyyy' }}</span>
               </div>
 
               <div class="meta-item">
                 <i class="fas fa-users"></i>
-                <span>{{ movie.vote_count | number }} votes</span>
+                <span>{{ movie?.vote_count ?? 0 | number }} votes</span>
               </div>
             </div>
 
@@ -92,13 +90,13 @@
             <div class="rating-bar-container">
               <div class="rating-bar-header">
                 <span class="bar-label">Audience Score</span>
-                <span class="bar-percentage">{{ (movie.vote_average * 10).toFixed(0) }}%</span>
+                <span class="bar-percentage">{{ ((movie?.vote_average ?? 0) * 10).toFixed(0) }}%</span>
               </div>
               <div class="rating-bar">
-                <div class="rating-fill" [style.width]="(movie.vote_average * 10) + '%'" [ngClass]="{
-                       'rating-high': movie.vote_average >= 7,
-                       'rating-medium': movie.vote_average >= 5 && movie.vote_average < 7,
-                       'rating-low': movie.vote_average < 5
+                <div class="rating-fill" [style.width]="((movie?.vote_average ?? 0) * 10) + '%'" [ngClass]="{
+                       'rating-high': (movie?.vote_average ?? 0) >= 7,
+                       'rating-medium': (movie?.vote_average ?? 0) >= 5 && (movie?.vote_average ?? 0) < 7,
+                       'rating-low': (movie?.vote_average ?? 0) < 5
                      }">
                 </div>
               </div>
