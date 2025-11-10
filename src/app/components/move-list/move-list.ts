@@ -11,6 +11,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { MovieDisplay } from '../../services/Display/movie-display';
+import { WatchlistService } from '../../services/watchList/watchlist.service';
+import { AutoplayVideos } from "../autoplay-videos/autoplay-videos";
 
 @Component({
   selector: 'app-move-list',
@@ -24,7 +26,8 @@ import { MovieDisplay } from '../../services/Display/movie-display';
     MatTooltipModule,
     MatSelectModule,
     MatProgressSpinnerModule,
-  ],
+    AutoplayVideos
+],
   templateUrl: './move-list.html',
   styleUrls: ['./move-list.css'],
 })
@@ -39,19 +42,22 @@ export class MoveList implements OnInit {
   selectedGenre: number | null = null;
   watchlist: Set<number> = new Set();
 
-  constructor(private movieDisplay: MovieDisplay, private router: Router){
+  constructor(private movieDisplay: MovieDisplay, private router: Router , private watchlistService: WatchlistService){
     this.movies$ = this.movieDisplay.movies$;
     this.genres$ = this.movieDisplay.genres$;
     this.isLoading$ = this.movieDisplay.isLoading$;
     this.currentPage$ = this.movieDisplay.currentPage$;
     this.totalPages$ = this.movieDisplay.totalPages$;
-    
+
   }
 
   ngOnInit(): void {
     this.movieDisplay.loadGenres();
     this.movieDisplay.loadMovies();
-    this.loadWatchlist(); // ⭐ أضف هذا السطر
+    this.loadWatchlist(); 
+    this.watchlistService.watchlist$.subscribe((ids) => {
+      this.watchlist = new Set(ids); 
+    });
   }
 
   nextPage() {
@@ -72,19 +78,19 @@ export class MoveList implements OnInit {
     this.movieDisplay.filterMovies(title);
   }
 
+
   toggleWatchlist(movie: any) {
-    if (this.watchlist.has(movie.id)) {
-      this.watchlist.delete(movie.id);
-    } else {
-      this.watchlist.add(movie.id);
-    }
-    this.saveWatchlist();
+  this.watchlistService.toggleMovie(movie.id); // استخدم التوغل من السيرفس
   }
+  updateWatchlistLocally() {
+  this.watchlistService.updateWatchlist(this.watchlist);
+}
 
   isInWatchlist(movieId: number): boolean {
     return this.watchlist.has(movieId);
   }
 
+  
   viewDetails(movie: any) {
     console.log('View details:', movie);
     // Navigate to movie details page
@@ -100,7 +106,5 @@ export class MoveList implements OnInit {
     }
   }
 
-  private saveWatchlist() {
-    localStorage.setItem('watchlist', JSON.stringify([...this.watchlist]));
-  }
+
 }

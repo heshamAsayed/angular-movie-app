@@ -2,37 +2,44 @@
 <div class="movies-page">
   <!-- Hero Section with Controls -->
   <div class="hero-section">
-    <div class="hero-content">
-      <h1 class="hero-title">Discover Movies</h1>
-      <p class="hero-subtitle">Explore millions of movies and TV shows</p>
-      
-      <div class="controls">
-        <!-- Search by title -->
-        <div class="control-item search-control">
-          <mat-form-field appearance="outline" class="large-field">
-            <mat-label>Search Movies</mat-label>
-            <input matInput type="text" placeholder="Search for movies, TV shows..." 
-                   (input)="searchByTitle($event.target.value)">
-            <mat-icon matPrefix>search</mat-icon>
-          </mat-form-field>
-        </div>
+  <!-- Video Background -->
+  <div class="hero-video-background">
+    <app-autoplay-videos></app-autoplay-videos>
+    <div class="hero-overlay"></div>
+  </div>
 
-        <!-- Genre Selector -->
-        <div class="control-item genre-control">
-          <mat-form-field appearance="outline" class="large-field">
-            <mat-label>Genre</mat-label>
-            <mat-select (selectionChange)="onGenreChange($event.value)">
-              <mat-option value="">All Genres</mat-option>
-              <mat-option *ngFor="let genre of genres$ | async" [value]="genre.id">
-                {{ genre.name }}
-              </mat-option>
-            </mat-select>
-            <mat-icon matPrefix>category</mat-icon>
-          </mat-form-field>
-        </div>
+  <!-- Hero Content -->
+  <div class="hero-content">
+    <h1 class="hero-title">Discover Movies</h1>
+    <p class="hero-subtitle">Explore millions of movies and TV shows</p>
+    
+    <div class="controls">
+      <!-- Search by title -->
+      <div class="control-item search-control">
+        <mat-form-field appearance="outline" class="large-field">
+          <mat-label>Search Movies</mat-label>
+          <input matInput type="text" placeholder="Search for movies, TV shows..." 
+                 (input)="searchByTitle($event.target.value)">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <!-- Genre Selector -->
+      <div class="control-item genre-control">
+        <mat-form-field appearance="outline" class="large-field">
+          <mat-label>Genre</mat-label>
+          <mat-select (selectionChange)="onGenreChange($event.value)">
+            <mat-option value="">All Genres</mat-option>
+            <mat-option *ngFor="let genre of genres$ | async" [value]="genre.id">
+              {{ genre.name }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>category</mat-icon>
+        </mat-form-field>
       </div>
     </div>
   </div>
+</div>
 
   <!-- Spinner -->
   <div *ngIf="isLoading$ | async" class="spinner-container">

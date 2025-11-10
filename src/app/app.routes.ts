@@ -10,6 +10,10 @@ export const routes: Routes = [
     path: 'details/:id',
     loadComponent: () =>
       import('./components/details/details').then(m => m.Details),
+  },{
+    path: 'watchlist',
+    loadComponent: () =>
+      import('./components/watch-list/watch-list').then(m => m.WatchList),
   },
   { path: '', redirectTo: 'movies', pathMatch: 'full' }, 
   { path: '**', redirectTo: 'movies' } 

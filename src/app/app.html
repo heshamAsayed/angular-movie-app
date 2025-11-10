@@ -2,8 +2,11 @@
   <div class="navbar-container">
     <!-- Logo Section - Left -->
     <div class="logo-section">
-      <span class="logo-icon">🎬</span>
-      <span class="logo-text">Movie App</span>
+      <a href="movies" class="logo-link">
+        <span class="logo-icon">🎬</span>
+        <span class="logo-text">Movie App</span>
+        
+      </a>
     </div>
 
     <!-- Right Section - All on Right -->
@@ -19,16 +22,23 @@
       </button>
       <mat-menu #langMenu="matMenu">
         <button mat-menu-item *ngFor="let lang of languages" (click)="onLanguageChange(lang)"
-          [class.active]="selectedLanguage.code === lang.code">
+          [class.active]="selectedLanguage.code === lang.code" [lang]="selectedLanguage">
           {{ lang.label }}
         </button>
       </mat-menu>
       <!-- Favorites Button -->
-      <button mat-icon-button class="favorites-btn">
-        <mat-icon [matBadge]="favoritesCount" matBadgeColor="warn" matBadgeSize="small">
-          favorite_border
-        </mat-icon>
-      </button>
+      <a href="watchlist" class="watchlist-link">
+        <span class="watchlist-label" *ngIf="NumberwatchlistMovies > 0">
+          {{ NumberwatchlistMovies }}
+        </span>
+
+        <button mat-icon-button class="favorites-btn">
+          <mat-icon>
+            favorite_border
+          </mat-icon>
+        </button>
+      </a>
+
 
       <!-- User Section - Not Logged In -->
       <ng-container *ngIf="!isLoggedIn">
@@ -88,9 +98,9 @@
         <div class="footer-section links-section">
           <h4 class="footer-title">Explore</h4>
           <ul class="footer-links horizontal-links">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Movies</a></li>
-            <li><a href="#">Watchlist</a></li>
+            <li><a href="Home">Home</a></li>
+            <li><a href="movies">Movies</a></li>
+            <li><a href="watchlist">Watchlist</a></li>
           </ul>
         </div>
       </div>
@@ -112,10 +122,10 @@
             <span>Ahmed Fawzy</span>
           </div>
           <div class="social-links-dropdown" *ngIf="showSocial['ahmed']">
-            <a class="social-btn" href="https://linkedin.com" target="_blank">
+            <a class="social-btn" href="https://www.linkedin.com/in/ahmed-mohamed-fawzy-b60040222" target="_blank">
               <i class="bi bi-linkedin"></i>
             </a>
-            <a class="social-btn" href="https://github.com" target="_blank">
+            <a class="social-btn" href="https://github.com/ahmed-fawzy2000" target="_blank">
               <i class="bi bi-github"></i>
             </a>
           </div>
@@ -127,10 +137,10 @@
             <span>Andrew Nassim</span>
           </div>
           <div class="social-links-dropdown" *ngIf="showSocial['andrew']">
-            <a class="social-btn" href="https://linkedin.com" target="_blank">
+            <a class="social-btn" href="https://www.linkedin.com/in/andrew-nassim-760876253" target="_blank">
               <i class="bi bi-linkedin"></i>
             </a>
-            <a class="social-btn" href="https://github.com" target="_blank">
+            <a class="social-btn" href="https://github.com/andrew-nassim" target="_blank">
               <i class="bi bi-github"></i>
             </a>
           </div>
@@ -142,10 +152,10 @@
             <span>Hesham Ahmed</span>
           </div>
           <div class="social-links-dropdown" *ngIf="showSocial['hesham']">
-            <a class="social-btn" href="https://linkedin.com" target="_blank">
+            <a class="social-btn" href="https://www.linkedin.com/in/hesham-a7med" target="_blank">
               <i class="bi bi-linkedin"></i>
             </a>
-            <a class="social-btn" href="https://github.com" target="_blank">
+            <a class="social-btn" href="https://github.com/heshamAsayed" target="_blank">
               <i class="bi bi-github"></i>
             </a>
           </div>
@@ -157,10 +167,10 @@
             <span>Mohamed Galal</span>
           </div>
           <div class="social-links-dropdown" *ngIf="showSocial['mohamed-g']">
-            <a class="social-btn" href="https://linkedin.com" target="_blank">
+            <a class="social-btn" href="https://www.linkedin.com/in/mohamed-galal-562561243" target="_blank">
               <i class="bi bi-linkedin"></i>
             </a>
-            <a class="social-btn" href="https://github.com" target="_blank">
+            <a class="social-btn" href="https://github.com/MohamedGll" target="_blank">
               <i class="bi bi-github"></i>
             </a>
           </div>
@@ -172,10 +182,10 @@
             <span>Mohamed Nasser</span>
           </div>
           <div class="social-links-dropdown" *ngIf="showSocial['mohamed-n']">
-            <a class="social-btn" href="https://linkedin.com" target="_blank">
+            <a class="social-btn" href="https://www.linkedin.com/in/mohammed970" target="_blank">
               <i class="bi bi-linkedin"></i>
             </a>
-            <a class="social-btn" href="https://github.com" target="_blank">
+            <a class="social-btn" href="https://github.com/Mohammed20367" target="_blank">
               <i class="bi bi-github"></i>
             </a>
           </div>
@@ -191,10 +201,10 @@
             <span>Hassan Eldash</span>
           </div>
           <div class="social-links-dropdown" *ngIf="showSocial['hassan']">
-            <a class="social-btn" href="https://linkedin.com" target="_blank">
+            <a class="social-btn" href="https://www.linkedin.com/in/hassaneldash" target="_blank">
               <i class="bi bi-linkedin"></i>
             </a>
-            <a class="social-btn" href="https://github.com" target="_blank">
+            <a class="social-btn" href="https://github.com/hassaneldash" target="_blank">
               <i class="bi bi-github"></i>
             </a>
           </div>

@@ -1,5 +1,5 @@
  .main-content {
-    padding: 2rem 1rem;
+    padding: 1rem 1.2rem;
     min-height: calc(100vh - 400px);
   }
 
@@ -507,3 +507,51 @@
 .social-links-dropdown .social-btn:hover i {
   transform: scale(1.2);
 } */
+
+/* watchlist-link */
+
+.watchlist-link {
+  position: relative;
+  display: inline-block;
+}
+
+.watchlist-label {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--rating-badge-text);
+  background-color: var(--warn-color);
+  border: 2px solid var(--navbar-bg);
+  border-radius: 50%;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  z-index: 20;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* إخفاء الـ badge الافتراضي من Material */
+.favorites-btn ::ng-deep .mat-badge-content {
+  display: none;
+}
+
+/* Animation للفت الانتباه */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* عند عدم وجود عناصر في الـ watchlist */
+.watchlist-label:empty {
+  display: none;
+}

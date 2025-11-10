@@ -1,0 +1,125 @@
+<div class="watchlist-container container-fluid mt-4 mb-5 px-3 px-md-4">
+
+
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-wrapper">
+    <div class="spinner-border" role="status" style="color: var(--primary-color);">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && watchlistMovies.length === 0" class="empty-state">
+    <div class="empty-icon-wrapper">
+      <i class="fas fa-bookmark empty-icon"></i>
+      <div class="empty-slash"></div>
+    </div>
+    <h2 class="empty-title">Your Watchlist is Empty</h2>
+    <p class="empty-subtitle">Start adding movies to keep track of what you want to watch</p>
+    <a href="movies" class="btn-browse">
+      <i class="fas fa-film me-2"></i>
+      Browse Movies
+    </a>
+  </div>
+
+
+  <!-- Watchlist Content -->
+  <div *ngIf="!isLoading && watchlistMovies.length > 0">
+    <!-- Header -->
+    <div class="watchlist-header mb-4">
+      <div class="header-content">
+        <div class="header-title-section">
+          <i class="fas fa-bookmark header-icon"></i>
+          <div>
+            <h1 class="page-title">My Watchlist</h1>
+            <p class="page-subtitle">{{ watchlistMovies.length }} {{ watchlistMovies.length === 1 ? 'Movie' : 'Movies'}} saved</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="mb-4" (click)="goBack()">
+      <a href="movies" class="btn-back">
+        <i class="fas fa-arrow-left me-2"></i>
+        <span>Back to Movies</span>
+      </a>
+    </div>
+    <!-- Movies Grid -->
+    <div class="movies-grid">
+      <div *ngFor="let movie of watchlistMovies; let i = index" class="movie-card-wrapper">
+        <div class="movie-card">
+          <!-- Poster Section -->
+          <div class="movie-poster-wrapper">
+            <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" [alt]="movie.title" class="movie-poster"
+              loading="lazy" />
+            <button (click)="removeMovie(movie.id)" class="btn-remove" title="Remove from watchlist">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+
+          <!-- Content Section -->
+          <div class="movie-content">
+            <!-- Title & Rating -->
+            <div class="movie-header">
+              <h3 class="movie-title">{{ movie.title }}</h3>
+              <div class="rating-badge">
+                <i class="fas fa-star"></i>
+                <span>{{ movie.vote_average.toFixed(1) }}</span>
+              </div>
+            </div>
+
+            <!-- Overview -->
+            <p class="movie-overview">
+              {{ movie.overview.length > 120 ? (movie.overview | slice:0:120) + '...' : movie.overview }}
+            </p>
+
+            <!-- Meta Information -->
+            <div class="movie-meta">
+              <div class="meta-item">
+                <i class="far fa-calendar"></i>
+                <span>{{ movie.release_date | date: 'MMM d, yyyy' }}</span>
+              </div>
+
+              <div class="meta-item">
+                <i class="fas fa-users"></i>
+                <span>{{ movie.vote_count | number }} votes</span>
+              </div>
+            </div>
+
+            <!-- Rating Bar -->
+            <div class="rating-bar-container">
+              <div class="rating-bar-header">
+                <span class="bar-label">Audience Score</span>
+                <span class="bar-percentage">{{ (movie.vote_average * 10).toFixed(0) }}%</span>
+              </div>
+              <div class="rating-bar">
+                <div class="rating-fill" [style.width]="(movie.vote_average * 10) + '%'" [ngClass]="{
+                       'rating-high': movie.vote_average >= 7,
+                       'rating-medium': movie.vote_average >= 5 && movie.vote_average < 7,
+                       'rating-low': movie.vote_average < 5
+                     }">
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <button class="btn-action btn-primary-action">
+                <i class="fas fa-play me-1"></i>
+                <span>Watch Now</span>
+              </button>
+              <a href="details/{{ movie.id }}">
+                <button class="btn-action btn-secondary-action">
+                  <i class="fas fa-info-circle"></i>
+                  <span> Details </span>
+                </button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

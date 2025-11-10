@@ -108,4 +108,11 @@ setLanguage(lang: string) {
       this.moviesSubject.next(filtered);
     }
   }
+
+
+  getMovieByIdWithVideos(id: number, lang?: string) {
+  const language = lang || this.languageSubject.value;
+  return this.api.getMovieByIdWithVideos(id, language);
+}
+
 }

@@ -231,6 +231,14 @@ $dark-theme: mat.define-theme((
   --rating-high: #66bb6a;
   --rating-medium: #ffeb3b;
   --rating-low: #ef5350;
+
+
+   // Watchlist Button Colors (Dark Mode)
+  --btn-remove-bg: rgba(211, 47, 47, 0.95);
+  // --btn-remove-bg22: rgba(211, 47, 47, 0.95);
+  --btn-remove-hover: #d32f2f;
+  --empty-state-icon: #bdbdbd;
+  --page-bg: #f5f5f5;
 }
 
 body {

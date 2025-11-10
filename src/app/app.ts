@@ -1,4 +1,4 @@
-import { Component, signal, HostListener } from '@angular/core';
+import { Component, signal, HostListener, OnInit } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
@@ -12,6 +12,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDividerModule } from '@angular/material/divider';
 import { MovieDisplay } from './services/Display/movie-display';
+import { WatchlistService } from './services/watchList/watchlist.service';
 
 @Component({
   selector: 'app-root',
@@ -34,12 +35,14 @@ import { MovieDisplay } from './services/Display/movie-display';
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
-export class App {
+export class App implements OnInit{
   readonly title = signal('Movie_APP');
   isLoggedIn = false;
   favoritesCount = 3;
   currentYear = new Date().getFullYear();
   public readonly isDarkMode = signal(localStorage.getItem('darkMode') === 'true');
+  // watchlistMovies : Set<number> =new Set();
+  NumberwatchlistMovies : number = 0;
 
   /* cspell:disable */
   showSocial: { [key: string]: boolean } = {
@@ -63,12 +66,18 @@ export class App {
   // Use last selected language from LocalStorage or default to first
   selectedLanguage = this.languages.find(l => l.code === localStorage.getItem('selectedLanguage')) || this.languages[0];
 
-  constructor(private movieDisplay: MovieDisplay) {
+  constructor(private movieDisplay: MovieDisplay , private watchlistService: WatchlistService) {
     // Apply initial theme
     this.applyTheme(this.isDarkMode());
 
     // Initialize service with selected language
     this.movieDisplay.setLanguage(this.selectedLanguage.code);
+  }
+
+  ngOnInit(): void {
+    this.watchlistService.watchlist$.subscribe((ids) => {
+      this.NumberwatchlistMovies = ids.size;
+    });
   }
 
   login = () => this.isLoggedIn = true;
