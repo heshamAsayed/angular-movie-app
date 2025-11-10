@@ -25,7 +25,9 @@ import { Genre } from '../../models/genre/genre-module';
   styleUrls: ['./details.css']
 })
 export class Details implements OnInit {
+[x: string]: any;
   movie: Movie | null = null; // Use Movie interface
+  recommendedMovies: Movie[] = []; // ✅ Store recommended movies
   isLoading = false;
   trailerUrl: SafeResourceUrl | null = null;
 
@@ -51,6 +53,7 @@ export class Details implements OnInit {
     // ✅ Subscribe to language changes and reload movie on language change
     this.movieDisplay.language$.subscribe(lang => {
       this.loadMovie(id, lang);
+      this.loadRecommendations(id, lang); // ✅ Load recommendations
     });
   }
 
@@ -78,6 +81,18 @@ export class Details implements OnInit {
     });
   }
 
+  /** Load recommended movies based on the current movie ID */
+  private loadRecommendations(id: number, lang: string): void {
+    this.movieDisplay.getMovieRecommendations(id, lang).subscribe({
+      next: (res: any) => {
+        this.recommendedMovies = res.results || [];
+      },
+      error: () => {
+        this.recommendedMovies = [];
+      }
+    });
+  }
+
   /** Navigate back to previous page */
   goBack(): void {
     this.location.back();
@@ -88,4 +103,20 @@ export class Details implements OnInit {
     const url = `https://www.youtube.com/embed/${videoKey}`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
+
+
+
+  /** Navigate to movie details page */
+goToMovie(id: number): void {
+  this.router.navigate(['/movies', id]);
+}
+
+getFirstHalf(items: any[]): any[] {
+  return items.slice(0, Math.ceil(items.length / 2));
+}
+
+getSecondHalf(items: any[]): any[] {
+  return items.slice(Math.ceil(items.length / 2));
+}
+
 }

@@ -116,4 +116,13 @@ export class MovieDisplay {
     const language = lang || this.languageSubject.value;
     return this.api.getMovieByIdWithVideos(id, language);
   }
+
+  /**
+   * Get movie recommendations based on a movie ID
+   * Uses the current language if not specified
+   */
+  getMovieRecommendations(id: number, lang?: string): Observable<any> {
+    const language = lang || this.languageSubject.value;
+    return this.api.getMovieRecommendations(id, language);
+  }
 }

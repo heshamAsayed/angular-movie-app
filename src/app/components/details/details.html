@@ -70,3 +70,41 @@
 <ng-template #loading>
   <div class="loading">Loading details...</div>
 </ng-template>
+
+<!-- Recommended Movies Section -->
+<div class="recommended-section" *ngIf="recommendedMovies?.length">
+  <h3 class="section-title">Recommended Movies</h3>
+  <div class="recommended-list">
+    
+    <!-- First Row -->
+    <div class="row">
+      <mat-card *ngFor="let rec of getFirstHalf(recommendedMovies)" 
+                class="recommended-card" 
+                (click)="goToMovie(rec.id)">
+        <img [src]="'https://image.tmdb.org/t/p/w200' + (rec.poster_path ?? '')"
+             [alt]="rec.title ?? ''"
+             (error)="$event.target.src='assets/no-poster.jpg'">
+        <mat-card-content>
+          <p class="rec-title">{{ rec.title }}</p>
+          <p class="rec-year">{{ rec.release_date ? (rec.release_date | date:'yyyy') : 'N/A' }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+    <!-- Second Row -->
+    <div class="row">
+      <mat-card *ngFor="let rec of getSecondHalf(recommendedMovies)" 
+                class="recommended-card" 
+                (click)="goToMovie(rec.id)">
+        <img [src]="'https://image.tmdb.org/t/p/w200' + (rec.poster_path ?? '')"
+             [alt]="rec.title ?? ''"
+             (error)="$event.target.src='assets/no-poster.jpg'">
+        <mat-card-content>
+          <p class="rec-title">{{ rec.title }}</p>
+          <p class="rec-year">{{ rec.release_date ? (rec.release_date | date:'yyyy') : 'N/A' }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+  </div>
+</div>
