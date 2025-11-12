@@ -1,0 +1,287 @@
+ <div class="register-page" id="mainContainer">
+        <div class="register-card">
+            <!-- Header -->
+            <div class="register-header">
+                <div class="header-icon">
+                    <i data-lucide="film"></i>
+                </div>
+                <h1 class="header-title">Create Account</h1>
+                <p class="header-subtitle">Join Movie App and discover amazing films</p>
+            </div>
+
+            <!-- Form Content -->
+            <div class="register-body">
+                <!-- Success Message -->
+                <div class="alert custom-alert alert-success d-none" id="successMessage" role="alert">
+                    <i data-lucide="check-circle"></i>
+                    <span id="successText">Account created successfully!</span>
+                </div>
+
+                <!-- Error Message -->
+                <div class="alert custom-alert alert-danger d-none" id="errorMessage" role="alert">
+                    <i data-lucide="alert-circle"></i>
+                    <span id="errorText">Please check the form and try again.</span>
+                </div>
+
+                <form id="registrationForm" novalidate>
+                    <!-- Name Field -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Full Name <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" id="name" name="name" 
+                               placeholder="Enter your full name" required minlength="2">
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Email Address <span class="required">*</span>
+                        </label>
+                        <input type="email" class="form-input" id="email" name="email" 
+                               placeholder="your@email.com" required>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Password <span class="required">*</span>
+                        </label>
+                        <div class="password-wrapper">
+                            <input type="password" class="form-input" id="password" name="password" 
+                                   placeholder="Create password" required minlength="6">
+                            <button type="button" class="password-toggle" id="togglePassword">
+                                <i data-lucide="eye" id="passwordIcon"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength d-none" id="passwordStrength">
+                            <span class="strength-label">Strength:</span>
+                            <span id="strengthText" class="strength-value"></span>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password Field -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Confirm Password <span class="required">*</span>
+                        </label>
+                        <div class="password-wrapper">
+                            <input type="password" class="form-input" id="confirmPassword" 
+                                   name="confirmPassword" placeholder="Re-enter password" required>
+                            <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                                <i data-lucide="eye" id="confirmPasswordIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Phone Field -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Phone Number <span class="optional">(optional)</span>
+                        </label>
+                        <input type="tel" class="form-input" id="phone" name="phone" 
+                               placeholder="+20 100 123 4567">
+                    </div>
+
+                    <!-- Country & City Row -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Country <span class="optional">(optional)</span>
+                                </label>
+                                <input type="text" class="form-input" id="country" name="country" 
+                                       placeholder="Egypt">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    City <span class="optional">(optional)</span>
+                                </label>
+                                <input type="text" class="form-input" id="city" name="city" 
+                                       placeholder="Minya">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Image Upload -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Profile Picture <span class="optional">(optional)</span>
+                        </label>
+                        <div id="uploadArea" class="upload-area">
+                            <i data-lucide="upload" class="upload-icon"></i>
+                            <span class="upload-text">Click to upload image</span>
+                            <span class="upload-hint">JPG, PNG, GIF - max 5 MB</span>
+                            <input type="file" id="profileImage" accept="image/*" class="d-none">
+                        </div>
+                        <div id="imagePreview" class="image-preview d-none">
+                            <img src="" alt="Profile preview" id="previewImg" class="preview-img">
+                            <button type="button" class="remove-image-btn" id="removeImage">
+                                <i data-lucide="x"></i>
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Terms Checkbox -->
+                    <div class="form-group">
+                        <div class="custom-checkbox">
+                            <input type="checkbox" id="agreedToTerms" required>
+                            <label for="agreedToTerms">
+                                I agree to the <a href="#" class="link">Terms & Conditions</a> and <a href="#" class="link">Privacy Policy</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i data-lucide="check-circle" class="btn-icon"></i>
+                        <span id="btnText">Create Account</span>
+                    </button>
+
+                    <!-- Login Link -->
+                    <div class="login-section">
+                        <p class="login-text">
+                            Already have an account? 
+                            <a href="login.html" class="link link-bold">Log In</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Footer Security Badge -->
+            <div class="register-footer">
+                <i data-lucide="shield" class="security-icon"></i>
+                <span class="security-text">Your data is fully protected</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Password visibility toggles
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+        const passwordIcon = document.getElementById('passwordIcon');
+
+        togglePassword.addEventListener('click', () => {
+            const type = password.type === 'password' ? 'text' : 'password';
+            password.type = type;
+            passwordIcon.setAttribute('data-lucide', type === 'password' ? 'eye' : 'eye-off');
+            lucide.createIcons();
+        });
+
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const confirmPasswordIcon = document.getElementById('confirmPasswordIcon');
+
+        toggleConfirmPassword.addEventListener('click', () => {
+            const type = confirmPassword.type === 'password' ? 'text' : 'password';
+            confirmPassword.type = type;
+            confirmPasswordIcon.setAttribute('data-lucide', type === 'password' ? 'eye' : 'eye-off');
+            lucide.createIcons();
+        });
+
+        // Password strength checker
+        password.addEventListener('input', () => {
+            const value = password.value;
+            const strengthDiv = document.getElementById('passwordStrength');
+            const strengthText = document.getElementById('strengthText');
+
+            if (value.length === 0) {
+                strengthDiv.classList.add('d-none');
+                return;
+            }
+
+            strengthDiv.classList.remove('d-none');
+            
+            let strength = 'weak';
+            if (value.length >= 8 && /[A-Z]/.test(value) && /[0-9]/.test(value) && /[^A-Za-z0-9]/.test(value)) {
+                strength = 'strong';
+            } else if (value.length >= 6 && (/[A-Z]/.test(value) || /[0-9]/.test(value))) {
+                strength = 'medium';
+            }
+
+            strengthText.textContent = strength.charAt(0).toUpperCase() + strength.slice(1);
+            strengthText.className = 'strength-value strength-' + strength;
+        });
+
+        // Profile image upload
+        const uploadArea = document.getElementById('uploadArea');
+        const profileImageInput = document.getElementById('profileImage');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        const removeImageBtn = document.getElementById('removeImage');
+
+        uploadArea.addEventListener('click', () => {
+            profileImageInput.click();
+        });
+
+        profileImageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.size <= 5 * 1024 * 1024) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImg.src = e.target.result;
+                    uploadArea.classList.add('d-none');
+                    imagePreview.classList.remove('d-none');
+                    lucide.createIcons();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removeImageBtn.addEventListener('click', () => {
+            profileImageInput.value = '';
+            previewImg.src = '';
+            uploadArea.classList.remove('d-none');
+            imagePreview.classList.add('d-none');
+        });
+
+        // Form submission
+        const form = document.getElementById('registrationForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            successMessage.classList.add('d-none');
+            errorMessage.classList.add('d-none');
+
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                errorMessage.classList.remove('d-none');
+                document.getElementById('errorText').textContent = 'Please fill in all required fields correctly.';
+                return;
+            }
+
+            if (password.value !== confirmPassword.value) {
+                errorMessage.classList.remove('d-none');
+                document.getElementById('errorText').textContent = 'Passwords do not match.';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            btnText.innerHTML = '<div class="spinner-border"></div> Creating account...';
+
+            setTimeout(() => {
+                successMessage.classList.remove('d-none');
+                document.getElementById('successText').textContent = 'Account created successfully! Redirecting...';
+                submitBtn.disabled = false;
+                btnText.textContent = 'Create Account';
+                lucide.createIcons();
+                
+                setTimeout(() => {
+                    form.reset();
+                    form.classList.remove('was-validated');
+                    successMessage.classList.add('d-none');
+                }, 2000);
+            }, 2000);
+        });
+    </script>

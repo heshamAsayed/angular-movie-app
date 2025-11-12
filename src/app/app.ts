@@ -13,6 +13,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatDividerModule } from '@angular/material/divider';
 import { MovieDisplay } from './services/Display/movie-display';
 import { WatchlistService } from './services/watchList/watchlist.service';
+import { AuthService } from './services/Authentication/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -30,43 +32,50 @@ import { WatchlistService } from './services/watchList/watchlist.service';
     MatInputModule,
     MatChipsModule,
     MatBadgeModule,
-    MatDividerModule
+    MatDividerModule,
   ],
   templateUrl: './app.html',
-  styleUrls: ['./app.css']
+  styleUrls: ['./app.css'],
 })
-export class App implements OnInit{
+export class App implements OnInit {
   readonly title = signal('Movie_APP');
   isLoggedIn = false;
   favoritesCount = 3;
   currentYear = new Date().getFullYear();
   public readonly isDarkMode = signal(localStorage.getItem('darkMode') === 'true');
   // watchlistMovies : Set<number> =new Set();
-  NumberwatchlistMovies : number = 0;
+  NumberwatchlistMovies: number = 0;
 
   /* cspell:disable */
   showSocial: { [key: string]: boolean } = {
-    'ahmed': false,
-    'andrew': false,
-    'hesham': false,
+    ahmed: false,
+    andrew: false,
+    hesham: false,
     'mohamed-g': false,
     'mohamed-n': false,
-    'hassan': false
+    hassan: false,
   };
   /* cspell:enable */
 
-  // languages array 
+  // languages array
   languages = [
     { code: 'en', label: 'English' },
     { code: 'ar', label: 'Arabic' },
     { code: 'fr', label: 'French' },
-    { code: 'zh', label: 'Chinese' }
+    { code: 'zh', label: 'Chinese' },
   ];
 
   // Use last selected language from LocalStorage or default to first
-  selectedLanguage = this.languages.find(l => l.code === localStorage.getItem('selectedLanguage')) || this.languages[0];
+  selectedLanguage =
+    this.languages.find((l) => l.code === localStorage.getItem('selectedLanguage')) ||
+    this.languages[0];
 
-  constructor(private movieDisplay: MovieDisplay , private watchlistService: WatchlistService) {
+  constructor(
+    private movieDisplay: MovieDisplay,
+    private watchlistService: WatchlistService,
+    private authService: AuthService,
+    private router: Router
+  ) {
     // Apply initial theme
     this.applyTheme(this.isDarkMode());
 
@@ -80,14 +89,26 @@ export class App implements OnInit{
     });
   }
 
-  login = () => this.isLoggedIn = true;
-  logout = () => this.isLoggedIn = false;
+  login() {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/movies']);
+      this.isLoggedIn = true;
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+      this.isLoggedIn = true;
+
+  }
 
   toggleTheme = () => {
-    this.isDarkMode.update(dark => !dark);
+    this.isDarkMode.update((dark) => !dark);
     this.applyTheme(this.isDarkMode());
     localStorage.setItem('darkMode', this.isDarkMode().toString());
-  }
+  };
 
   private applyTheme(isDark: boolean) {
     document.body.classList.toggle('dark-mode', isDark);
@@ -95,7 +116,7 @@ export class App implements OnInit{
 
   toggleSocial(devName: string, event: Event) {
     event.stopPropagation();
-    Object.keys(this.showSocial).forEach(key => {
+    Object.keys(this.showSocial).forEach((key) => {
       if (key !== devName) {
         this.showSocial[key] = false;
       }
@@ -105,7 +126,7 @@ export class App implements OnInit{
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
-    Object.keys(this.showSocial).forEach(key => {
+    Object.keys(this.showSocial).forEach((key) => {
       this.showSocial[key] = false;
     });
   }

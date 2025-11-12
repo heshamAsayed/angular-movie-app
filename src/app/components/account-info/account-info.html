@@ -1,0 +1,319 @@
+<div class="container-fluid account-container">
+  <div class="row align-items-start justify-content-center min-vh-100 py-5">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+      @if (user()) {
+      <div class="card account-card shadow-lg">
+        <div class="card-header bg-primary text-white">
+          <h2 class="mb-0">My Account</h2>
+        </div>
+
+        <div class="card-body p-5">
+          <!-- Success Message -->
+          @if (successMessage()) {
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ successMessage() }}
+            <button
+              type="button"
+              class="btn-close"
+              (click)="successMessage.set(null)"
+              aria-label="Close"
+            ></button>
+          </div>
+          }
+
+          <!-- Error Message -->
+          @if (errorMessage()) {
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> {{ errorMessage() }}
+            <button
+              type="button"
+              class="btn-close"
+              (click)="errorMessage.set(null)"
+              aria-label="Close"
+            ></button>
+          </div>
+          }
+
+          <!-- Profile Section -->
+          @if (!isEditing() && !isChangingPassword()) {
+          <div class="profile-section mb-5">
+            <div class="row align-items-center mb-4">
+              <div class="col-md-3 text-center">
+                @if (user()?.profileImage) {
+                <img
+                  [src]="user()?.profileImage"
+                  alt="Profile"
+                  class="profile-image rounded-circle shadow"
+                />
+                } @else {
+                <div class="profile-image-placeholder rounded-circle shadow">
+                  <i class="bi bi-person-fill"></i>
+                </div>
+                }
+              </div>
+              <div class="col-md-9">
+                <h3 class="mb-2">{{ user()?.name }}</h3>
+                <p class="text-muted mb-1">
+                  <i class="bi bi-envelope"></i> {{ user()?.email }}
+                </p>
+                @if (user()?.phone) {
+                <p class="text-muted mb-1">
+                  <i class="bi bi-telephone"></i> {{ user()?.phone }}
+                </p>
+                }
+                @if (user()?.city || user()?.country) {
+                <p class="text-muted">
+                  <i class="bi bi-geo-alt"></i>
+                  @if (user()?.city) { {{ user()?.city }}, } @if (user()?.country) { {{ user()?.country }}
+                  }
+                </p>
+                }
+              </div>
+            </div>
+
+            <div class="button-group">
+              <button class="btn btn-primary" (click)="startEditing()" [disabled]="isLoading()">
+                <i class="bi bi-pencil"></i> Edit Profile
+              </button>
+              <button class="btn btn-secondary" (click)="startChangingPassword()" [disabled]="isLoading()">
+                <i class="bi bi-key"></i> Change Password
+              </button>
+              <button class="btn btn-danger" (click)="logout()" [disabled]="isLoading()">
+                <i class="bi bi-box-arrow-right"></i> Logout
+              </button>
+            </div>
+          </div>
+
+          <!-- Watchlist Stats -->
+          <hr />
+          <div class="watchlist-stats mt-4">
+            <h4 class="mb-3">Watchlist</h4>
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle"></i>
+              You have
+              <strong>{{ user()?.watchlist?.length || 0 }}</strong>
+              movie(s) in your watchlist.
+            </div>
+            <a href="/movies" class="btn btn-outline-primary">
+              <i class="bi bi-film"></i> View My Watchlist
+            </a>
+          </div>
+          } @else if (isEditing()) {
+          <!-- Edit Profile Form -->
+          <h3 class="mb-4">Edit Profile</h3>
+          <form #editForm="ngForm">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="mb-3 text-center">
+                  @if (profileImagePreview()) {
+                  <img [src]="profileImagePreview()" alt="Profile preview" class="profile-preview-img rounded" />
+                  } @else if (user()?.profileImage) {
+                  <img [src]="user()?.profileImage" alt="Profile" class="profile-preview-img rounded" />
+                  } @else {
+                  <div class="profile-image-placeholder-lg rounded">
+                    <i class="bi bi-person-fill"></i>
+                  </div>
+                  }
+                </div>
+                <div class="mb-3">
+                  <label for="profileImage" class="form-label">Change Profile Picture</label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="profileImage"
+                    accept="image/*"
+                    (change)="onProfileImageSelected($event)"
+                    [disabled]="isLoading()"
+                  />
+                  <small class="text-muted">Max size: 5MB</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="name" class="form-label fw-semibold">Full Name</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    id="name"
+                    name="name"
+                    [(ngModel)]="editedUser.name"
+                    [disabled]="isLoading()"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="email" class="form-label fw-semibold">Email</label>
+                  <input
+                    type="email"
+                    class="form-control form-control-lg"
+                    id="email"
+                    [value]="user()?.email"
+                    disabled
+                  />
+                  <small class="text-muted">Email cannot be changed</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="phone" class="form-label fw-semibold">Phone</label>
+                  <input
+                    type="tel"
+                    class="form-control form-control-lg"
+                    id="phone"
+                    name="phone"
+                    [(ngModel)]="editedUser.phone"
+                    [disabled]="isLoading()"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="country" class="form-label fw-semibold">Country</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg"
+                    id="country"
+                    name="country"
+                    [(ngModel)]="editedUser.country"
+                    [disabled]="isLoading()"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="city" class="form-label fw-semibold">City</label>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                id="city"
+                name="city"
+                [(ngModel)]="editedUser.city"
+                [disabled]="isLoading()"
+              />
+            </div>
+
+            <div class="button-group mt-4">
+              <button type="button" class="btn btn-primary" (click)="saveProfile()" [disabled]="isLoading()">
+                @if (isLoading()) {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Saving...
+                } @else {
+                <i class="bi bi-check"></i> Save Changes
+                }
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="cancelEditing()" [disabled]="isLoading()">
+                <i class="bi bi-x"></i> Cancel
+              </button>
+            </div>
+          </form>
+          } @else if (isChangingPassword()) {
+          <!-- Change Password Form -->
+          <h3 class="mb-4">Change Password</h3>
+          <form #passwordForm="ngForm">
+            <div class="mb-3">
+              <label for="currentPassword" class="form-label fw-semibold">Current Password</label>
+              <div class="input-group input-group-lg">
+                <input
+                  [type]="showPassword() ? 'text' : 'password'"
+                  class="form-control"
+                  id="currentPassword"
+                  name="currentPassword"
+                  [(ngModel)]="currentPassword"
+                  placeholder="Enter current password"
+                  required
+                  [disabled]="isLoading()"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                  [disabled]="isLoading()"
+                >
+                  <i [class]="showPassword() ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="newPassword" class="form-label fw-semibold">New Password</label>
+              <div class="input-group input-group-lg">
+                <input
+                  [type]="showNewPassword() ? 'text' : 'password'"
+                  class="form-control"
+                  id="newPassword"
+                  name="newPassword"
+                  [(ngModel)]="newPassword"
+                  placeholder="Enter new password"
+                  required
+                  minlength="6"
+                  [disabled]="isLoading()"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  (click)="toggleNewPasswordVisibility()"
+                  [disabled]="isLoading()"
+                >
+                  <i [class]="showNewPassword() ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="confirmPassword" class="form-label fw-semibold">Confirm New Password</label>
+              <div class="input-group input-group-lg">
+                <input
+                  [type]="showConfirmPassword() ? 'text' : 'password'"
+                  class="form-control"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  [(ngModel)]="confirmPassword"
+                  placeholder="Confirm new password"
+                  required
+                  minlength="6"
+                  [disabled]="isLoading()"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  (click)="toggleConfirmPasswordVisibility()"
+                  [disabled]="isLoading()"
+                >
+                  <i [class]="showConfirmPassword() ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="button-group">
+              <button type="button" class="btn btn-primary" (click)="changePassword()" [disabled]="isLoading()">
+                @if (isLoading()) {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Updating...
+                } @else {
+                <i class="bi bi-check"></i> Update Password
+                }
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="cancelPasswordChange()" [disabled]="isLoading()">
+                <i class="bi bi-x"></i> Cancel
+              </button>
+            </div>
+          </form>
+          }
+        </div>
+      </div>
+      } @else {
+      <div class="alert alert-warning" role="alert">
+        <i class="bi bi-exclamation-triangle"></i> Loading user information...
+      </div>
+      }
+    </div>
+  </div>
+</div>
