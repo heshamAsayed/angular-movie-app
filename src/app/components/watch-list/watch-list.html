@@ -17,10 +17,11 @@
     </div>
     <h2 class="empty-title">Your Watchlist is Empty</h2>
     <p class="empty-subtitle">Start adding movies to keep track of what you want to watch</p>
-    <a href="movies" class="btn-browse">
+    <a [routerLink]="['/movies']" class="btn-browse">
       <i class="fas fa-film me-2"></i>
       Browse Movies
     </a>
+
   </div>
 
 
@@ -33,7 +34,8 @@
           <i class="fas fa-bookmark header-icon"></i>
           <div>
             <h1 class="page-title">My Watchlist</h1>
-            <p class="page-subtitle">{{ watchlistMovies.length }} {{ watchlistMovies.length === 1 ? 'Movie' : 'Movies'}} saved</p>
+            <p class="page-subtitle">{{ watchlistMovies.length }} {{ watchlistMovies.length === 1 ? 'Movie' : 'Movies'}}
+              saved</p>
           </div>
         </div>
       </div>

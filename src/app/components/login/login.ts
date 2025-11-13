@@ -8,6 +8,9 @@ import { GoogleAuthProvider, getRedirectResult, signInWithRedirect ,signInWithPo
 import { from } from 'rxjs'; // Import 'from' from 'rxjs'
 import { tap } from 'rxjs/operators'; // Import 'tap' from 'rxjs/operators'
 import { User } from '../../models/user.model'; // Import User model
+import { getDatabase, ref, set } from 'firebase/database';
+import { getApp } from 'firebase/app';
+import { FacebookAuthProvider } from 'firebase/auth';
 @Component({
   selector: 'app-login-page',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
@@ -79,17 +82,70 @@ ngOnInit() {
 
 
   
-    loginWithGoogle() {
-      const provider = new GoogleAuthProvider();
-    return from(signInWithPopup(this.auth.auth, provider).then(res => res.user))
+   loginWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    this.loading = true; // ابدأ التحميل
+    this.error = ''; // امسح أي أخطاء سابقة
+
+    from(signInWithPopup(this.auth.auth, provider).then(res => res.user))
       .pipe(
         tap((user: any | null) => {
           if (user) {
-            // بعد تسجيل الدخول نوجّه المستخدم مباشرة لصفحة movies
+            this.app.isLoggedIn = true;
             this.router.navigate(['/movies']);
           }
         })
-      );
-    }
+      ).subscribe({
+        next: (user) => {
+          this.loading = false; 
+          console.log('Google login successful:', user);
+        },
+        error: (err) => {
+          this.loading = false; // أوقف التحميل عند الخطأ
+          console.error('Google login error:', err);
+          this.error = 'Google login failed: ' + (err.message || 'Unknown error'); // اعرض الخطأ للمستخدم
+        }
+      });
+  }
 
+
+  
+    // import { FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
+  loginWithFacebook() {
+    const provider = new FacebookAuthProvider();
+    signInWithPopup(this.auth.auth, provider) // auth.auth هو الـ Firebase Auth instance
+      .then((result) => {
+        const user = result.user;
+        if (!user) throw new Error('Facebook login failed');
+  
+        const db = getDatabase(getApp());
+        const newUser = {
+          uid: user.uid,
+          name: user.displayName || 'New User',
+          email: user.email || '',
+          phone: user.phoneNumber || null,
+          country: null,
+          city: null,
+          profileImage: user.photoURL || null,
+          watchlist: [],
+          createdAt: Date.now(),
+          lastLogin: Date.now(),
+        };
+  
+        // حفظ المستخدم في DB
+        set(ref(db, `users/${user.uid}`), newUser);
+  
+        // تحديث الحالة في AuthService
+        // this.auth.setCurrentUser(newUser); // محتاج تعمل ميثود في AuthService لتحديث currentUser و isAuthenticated
+  
+        // حفظ في localStorage
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('currentUser', JSON.stringify(newUser));
+      })
+      .catch((err) => {
+        console.error('Facebook login error:', err);
+        this.error = 'Facebook login failed, try again';
+      });
+  }
+  
 }

@@ -6,13 +6,14 @@ import { AuthService } from '../../services/Authentication/auth.service';
 import { User } from '../../models/user.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-account-info',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './account-info.html',
-  styleUrls: ['./account-info.css']
+  styleUrls: ['./account-info.css'],
 })
 export class AccountInfoComponent implements OnInit, OnDestroy {
   user = signal<User | null>(null);
@@ -35,10 +36,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     // Check authentication
@@ -51,15 +49,15 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
 
     this.authService.loading$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(loading => this.isLoading.set(loading));
+      .subscribe((loading) => this.isLoading.set(loading));
 
     this.authService.error$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(error => this.errorMessage.set(error));
+      .subscribe((error) => this.errorMessage.set(error));
 
     this.authService.currentUser$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(user => this.user.set(user));
+      .subscribe((user) => this.user.set(user));
   }
 
   ngOnDestroy(): void {
@@ -93,7 +91,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
         name: this.editedUser.name || this.user()?.name,
         phone: this.editedUser.phone || null,
         country: this.editedUser.country || null,
-        city: this.editedUser.city || null
+        city: this.editedUser.city || null,
       };
 
       if (this.selectedProfileImage) {
@@ -110,29 +108,36 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       this.errorMessage.set(error.message);
     }
   }
+async onProfileImageSelected(event: any): Promise<void> {
+  const file = event.target.files[0];
+  if (!file) return;
 
-  onProfileImageSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        this.errorMessage.set('Please select a valid image file');
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        this.errorMessage.set('Image size must not exceed 5MB');
-        return;
-      }
-
-      this.selectedProfileImage = file;
-
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.profileImagePreview.set(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
+  // Validate file type
+  if (!file.type.startsWith('image/')) {
+    this.errorMessage.set('Please select a valid image file');
+    return;
   }
+
+  // Validate file size (5MB max)
+  if (file.size > 5 * 1024 * 1024) {
+    this.errorMessage.set('Image size must not exceed 5MB');
+    return;
+  }
+
+  this.selectedProfileImage = file;
+
+  // Read file as Data URL
+  const reader = new FileReader();
+  reader.onload = (e: any) => {
+    const dataUrl = e.target.result;
+    this.profileImagePreview.set(dataUrl);
+
+    // حفظ الصورة في localStorage
+    localStorage.setItem('profileImage', dataUrl);
+  };
+  reader.readAsDataURL(file);
+}
+
 
   startChangingPassword(): void {
     this.isChangingPassword.set(true);
@@ -186,16 +191,20 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
   }
 
   togglePasswordVisibility(): void {
-    this.showPassword.update(v => !v);
+    this.showPassword.update((v) => !v);
   }
 
   toggleNewPasswordVisibility(): void {
-    this.showNewPassword.update(v => !v);
+    this.showNewPassword.update((v) => !v);
   }
 
   toggleConfirmPasswordVisibility(): void {
-    this.showConfirmPassword.update(v => !v);
+    this.showConfirmPassword.update((v) => !v);
   }
 
-  
+ // component.ts
+getProfileImageFromLocalStorage(): string | null {
+  return localStorage.getItem('profileImageURL');
+}
+
 }

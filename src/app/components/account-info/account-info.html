@@ -12,12 +12,7 @@
           @if (successMessage()) {
           <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ successMessage() }}
-            <button
-              type="button"
-              class="btn-close"
-              (click)="successMessage.set(null)"
-              aria-label="Close"
-            ></button>
+            <button type="button" class="btn-close" (click)="successMessage.set(null)" aria-label="Close"></button>
           </div>
           }
 
@@ -25,12 +20,7 @@
           @if (errorMessage()) {
           <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error:</strong> {{ errorMessage() }}
-            <button
-              type="button"
-              class="btn-close"
-              (click)="errorMessage.set(null)"
-              aria-label="Close"
-            ></button>
+            <button type="button" class="btn-close" (click)="errorMessage.set(null)" aria-label="Close"></button>
           </div>
           }
 
@@ -40,11 +30,9 @@
             <div class="row align-items-center mb-4">
               <div class="col-md-3 text-center">
                 @if (user()?.profileImage) {
-                <img
-                  [src]="user()?.profileImage"
-                  alt="Profile"
-                  class="profile-image rounded-circle shadow"
-                />
+                <img 
+                  [src]="getProfileImageFromLocalStorage() || user()?.profileImage || 'assets/default-avatar.png'"
+                  alt="Profile" class="profile-image rounded-circle shadow" />
                 } @else {
                 <div class="profile-image-placeholder rounded-circle shadow">
                   <i class="bi bi-person-fill"></i>
@@ -98,6 +86,7 @@
               <i class="bi bi-film"></i> View My Watchlist
             </a>
           </div>
+
           } @else if (isEditing()) {
           <!-- Edit Profile Form -->
           <h3 class="mb-4">Edit Profile</h3>
@@ -117,14 +106,8 @@
                 </div>
                 <div class="mb-3">
                   <label for="profileImage" class="form-label">Change Profile Picture</label>
-                  <input
-                    type="file"
-                    class="form-control"
-                    id="profileImage"
-                    accept="image/*"
-                    (change)="onProfileImageSelected($event)"
-                    [disabled]="isLoading()"
-                  />
+                  <input type="file" class="form-control" id="profileImage" accept="image/*"
+                    (change)="onProfileImageSelected($event)" [disabled]="isLoading()" />
                   <small class="text-muted">Max size: 5MB</small>
                 </div>
               </div>
@@ -134,26 +117,15 @@
               <div class="col-md-6">
                 <div class="mb-3">
                   <label for="name" class="form-label fw-semibold">Full Name</label>
-                  <input
-                    type="text"
-                    class="form-control form-control-lg"
-                    id="name"
-                    name="name"
-                    [(ngModel)]="editedUser.name"
-                    [disabled]="isLoading()"
-                  />
+                  <input type="text" class="form-control form-control-lg" id="name" name="name"
+                    [(ngModel)]="editedUser.name" [disabled]="isLoading()" />
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
                   <label for="email" class="form-label fw-semibold">Email</label>
-                  <input
-                    type="email"
-                    class="form-control form-control-lg"
-                    id="email"
-                    [value]="user()?.email"
-                    disabled
-                  />
+                  <input type="email" class="form-control form-control-lg" id="email" [value]="user()?.email"
+                    disabled />
                   <small class="text-muted">Email cannot be changed</small>
                 </div>
               </div>
@@ -163,41 +135,23 @@
               <div class="col-md-6">
                 <div class="mb-3">
                   <label for="phone" class="form-label fw-semibold">Phone</label>
-                  <input
-                    type="tel"
-                    class="form-control form-control-lg"
-                    id="phone"
-                    name="phone"
-                    [(ngModel)]="editedUser.phone"
-                    [disabled]="isLoading()"
-                  />
+                  <input type="tel" class="form-control form-control-lg" id="phone" name="phone"
+                    [(ngModel)]="editedUser.phone" [disabled]="isLoading()" />
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
                   <label for="country" class="form-label fw-semibold">Country</label>
-                  <input
-                    type="text"
-                    class="form-control form-control-lg"
-                    id="country"
-                    name="country"
-                    [(ngModel)]="editedUser.country"
-                    [disabled]="isLoading()"
-                  />
+                  <input type="text" class="form-control form-control-lg" id="country" name="country"
+                    [(ngModel)]="editedUser.country" [disabled]="isLoading()" />
                 </div>
               </div>
             </div>
 
             <div class="mb-3">
               <label for="city" class="form-label fw-semibold">City</label>
-              <input
-                type="text"
-                class="form-control form-control-lg"
-                id="city"
-                name="city"
-                [(ngModel)]="editedUser.city"
-                [disabled]="isLoading()"
-              />
+              <input type="text" class="form-control form-control-lg" id="city" name="city"
+                [(ngModel)]="editedUser.city" [disabled]="isLoading()" />
             </div>
 
             <div class="button-group mt-4">
@@ -221,22 +175,11 @@
             <div class="mb-3">
               <label for="currentPassword" class="form-label fw-semibold">Current Password</label>
               <div class="input-group input-group-lg">
-                <input
-                  [type]="showPassword() ? 'text' : 'password'"
-                  class="form-control"
-                  id="currentPassword"
-                  name="currentPassword"
-                  [(ngModel)]="currentPassword"
-                  placeholder="Enter current password"
-                  required
-                  [disabled]="isLoading()"
-                />
-                <button
-                  class="btn btn-outline-secondary"
-                  type="button"
-                  (click)="togglePasswordVisibility()"
-                  [disabled]="isLoading()"
-                >
+                <input [type]="showPassword() ? 'text' : 'password'" class="form-control" id="currentPassword"
+                  name="currentPassword" [(ngModel)]="currentPassword" placeholder="Enter current password" required
+                  [disabled]="isLoading()" />
+                <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()"
+                  [disabled]="isLoading()">
                   <i [class]="showPassword() ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
                 </button>
               </div>
@@ -245,23 +188,11 @@
             <div class="mb-3">
               <label for="newPassword" class="form-label fw-semibold">New Password</label>
               <div class="input-group input-group-lg">
-                <input
-                  [type]="showNewPassword() ? 'text' : 'password'"
-                  class="form-control"
-                  id="newPassword"
-                  name="newPassword"
-                  [(ngModel)]="newPassword"
-                  placeholder="Enter new password"
-                  required
-                  minlength="6"
-                  [disabled]="isLoading()"
-                />
-                <button
-                  class="btn btn-outline-secondary"
-                  type="button"
-                  (click)="toggleNewPasswordVisibility()"
-                  [disabled]="isLoading()"
-                >
+                <input [type]="showNewPassword() ? 'text' : 'password'" class="form-control" id="newPassword"
+                  name="newPassword" [(ngModel)]="newPassword" placeholder="Enter new password" required minlength="6"
+                  [disabled]="isLoading()" />
+                <button class="btn btn-outline-secondary" type="button" (click)="toggleNewPasswordVisibility()"
+                  [disabled]="isLoading()">
                   <i [class]="showNewPassword() ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
                 </button>
               </div>
@@ -270,23 +201,11 @@
             <div class="mb-4">
               <label for="confirmPassword" class="form-label fw-semibold">Confirm New Password</label>
               <div class="input-group input-group-lg">
-                <input
-                  [type]="showConfirmPassword() ? 'text' : 'password'"
-                  class="form-control"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  [(ngModel)]="confirmPassword"
-                  placeholder="Confirm new password"
-                  required
-                  minlength="6"
-                  [disabled]="isLoading()"
-                />
-                <button
-                  class="btn btn-outline-secondary"
-                  type="button"
-                  (click)="toggleConfirmPasswordVisibility()"
-                  [disabled]="isLoading()"
-                >
+                <input [type]="showConfirmPassword() ? 'text' : 'password'" class="form-control" id="confirmPassword"
+                  name="confirmPassword" [(ngModel)]="confirmPassword" placeholder="Confirm new password" required
+                  minlength="6" [disabled]="isLoading()" />
+                <button class="btn btn-outline-secondary" type="button" (click)="toggleConfirmPasswordVisibility()"
+                  [disabled]="isLoading()">
                   <i [class]="showConfirmPassword() ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
                 </button>
               </div>

@@ -24,7 +24,9 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { User } from './models/user.model';
 import { Observable } from 'rxjs';
 import { RouterModule } from '@angular/router';
-
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { FirebaseModule } from './models/firebase/firebase-module';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -55,7 +57,6 @@ export class App implements OnInit {
   currentUser$: Observable<User | null>;
 
   public readonly isDarkMode = signal(localStorage.getItem('darkMode') === 'true');
-  NumberwatchlistMovies: number = 0;
 
   /* cspell:disable */
   showSocial: { [key: string]: boolean } = {
@@ -99,6 +100,49 @@ export class App implements OnInit {
     this.currentUser$ = this.authService.currentUser$;
   }
 
+  NumberwatchlistMovies: number = 0;
+  showLoginMessage = false;
+
+navigateToWatchlist() {
+  this.authService.isAuthenticated$.subscribe(isLoggedIn => {
+    if (isLoggedIn) {
+      // لو مسجل دخول روح على watchlist
+      this.router.navigate(['/watchlist']);
+    } else {
+      // لو مش مسجل دخول
+      this.showLoginMessage = true;
+
+      // اختفاء الرسالة بعد 3 ثواني
+      setTimeout(() => {
+        this.showLoginMessage = false;
+      }, 3000);
+
+      // توجيه المستخدم للصفحة الرئيسية أو تسجيل الدخول
+      this.router.navigate(['/login'], { 
+        queryParams: { 
+          returnUrl: '/watchlist',
+          message: 'login_required_watchlist' 
+        } 
+      });
+    }
+  }).unsubscribe();
+}
+
+navigateToProfile() {
+  this.authService.isAuthenticated$.subscribe(isLoggedIn => {
+    if (isLoggedIn) {
+      this.router.navigate(['/profile']);
+    } else {
+      this.router.navigate(['/login'], { 
+        queryParams: { 
+          returnUrl: '/profile',
+          message: 'login_required_profile' 
+        } 
+      });
+    }
+  }).unsubscribe();
+}
+
   ngOnInit(): void {
     this.watchlistService.watchlist$.subscribe((ids) => {
       this.NumberwatchlistMovies = ids.size;
@@ -115,6 +159,18 @@ export class App implements OnInit {
         });
       }
     });
+
+    this.authService.isAuthenticated$.subscribe((loggedIn) => {
+      if (loggedIn) {
+        // لو المستخدم عامل login مسبقًا
+        this.router.navigate(['/watchlist']);
+      }
+    });
+
+    // متابعة watchlist count
+    this.watchlistService.watchlist$.subscribe((ids) => {
+      this.NumberwatchlistMovies = ids.size;
+    });
   }
 
   login() {
@@ -130,6 +186,7 @@ export class App implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
     this.isLoggedIn = true;
+    this.watchlistService.clearWatchlist();     
   }
 
   toggleTheme = () => {
@@ -164,13 +221,58 @@ export class App implements OnInit {
     localStorage.setItem('selectedLanguage', language.code);
     this.movieDisplay.setLanguage(language.code);
   }
+
+  animations = [
+    trigger('slideIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-10px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0, transform: 'translateY(-10px)' })),
+      ]),
+    ]),
+  ];
+
+
+  // component.ts
+getProfileImageFromLocalStorage(): string | null {
+  return localStorage.getItem('profileImageURL');
 }
 
-bootstrapApplication(App, {
-  providers: [
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideDatabase(() => getDatabase()),
-        provideStorage(() => getStorage()),
-  ],
-});
+// showLoginMessage = false;
+
+// navigateToWatchlist(event: Event) {
+//   event.preventDefault(); // منع إعادة تحميل الصفحة
+//   this.authService.isAuthenticated$.subscribe(isLoggedIn => {
+//     if (isLoggedIn) {
+//       this.router.navigate(['/watchlist']);
+//     } else {
+//       this.showLoginMessage = true;
+
+//       setTimeout(() => {
+//         this.showLoginMessage = false;
+//       }, 3000);
+
+//       // توجه المستخدم للـ login مع returnUrl
+//       this.router.navigate(['/login'], { 
+//         queryParams: { 
+//           returnUrl: '/watchlist',
+//           message: 'login_required_watchlist' 
+//         } 
+//       });
+//     }
+//   }).unsubscribe();
+// }
+
+
+}
+
+// bootstrapApplication(App, {
+//   providers: [
+//     provideFirebaseApp(() => initializeApp(environment.firebase)),
+//     provideAuth(() => getAuth()),
+//     provideDatabase(() => getDatabase()),
+//     provideStorage(() => getStorage()),
+//   ],
+// });

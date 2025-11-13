@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, from } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
+import { delay, switchMap, tap } from 'rxjs/operators';
 import { User } from '../../models/user.model';
-import { getDatabase, ref, set ,get } from '@angular/fire/database';
+import { getDatabase, ref, set, get } from '@angular/fire/database';
 import { getApp } from '@angular/fire/app';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 import {
   Auth,
   signInWithEmailAndPassword,
@@ -14,7 +16,7 @@ import {
   signOut,
   getAuth, // Changed 'get' to 'getAuth'
   onAuthStateChanged,
-} from '@angular/fire/auth';
+} from '@angular/fire/auth'; // Import 'ref' from '@angular/fire/database'
 
 @Injectable({
   providedIn: 'root',
@@ -34,13 +36,45 @@ export class AuthService {
   private _error = new BehaviorSubject<string | null>(null);
   public error$ = this._error.asObservable();
 
+  // constructor(public auth: Auth) {
+  //   onAuthStateChanged(this.auth, async (user) => {
+  //     if (user) {
+  //       const db = getDatabase();
+
+  //       const userRef = ref(db, `users/${user.uid}`);
+  //        const snapshot = await get(userRef);
+
+  //       const currentUser: User = snapshot.exists()
+  //         ? (snapshot.val() as User)
+  //         : {
+  //             uid: user.uid,
+  //             name: user.displayName || 'New User',
+  //             email: user.email || '',
+  //             phone: null,
+  //             country: null,
+  //             city: null,
+  //             profileImage: null,
+  //             watchlist: [],
+  //             createdAt: Date.now(),
+  //             lastLogin: Date.now(),
+  //           };
+
+  //       this._currentUser.next(currentUser);
+  //       this._isAuthenticated.next(true);
+  //     } else {
+  //       this._currentUser.next(null);
+  //       this._isAuthenticated.next(false);
+  //     }
+  //   });
+  // }
+
   constructor(public auth: Auth) {
     onAuthStateChanged(this.auth, async (user) => {
       if (user) {
-        const db = getDatabase(getApp());
+        const db = getDatabase();
         const userRef = ref(db, `users/${user.uid}`);
-         const snapshot = await get(userRef);
-        
+        const snapshot = await get(userRef);
+
         const currentUser: User = snapshot.exists()
           ? (snapshot.val() as User)
           : {
@@ -56,15 +90,22 @@ export class AuthService {
               lastLogin: Date.now(),
             };
 
+        // ✅ تحديث localStorage
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
         this._currentUser.next(currentUser);
         this._isAuthenticated.next(true);
       } else {
+        // ✅ مسح localStorage عند الخروج
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('currentUser');
+
         this._currentUser.next(null);
         this._isAuthenticated.next(false);
       }
     });
   }
-
   // --- Check login status ---
   isAuthenticated(): boolean {
     return !!localStorage.getItem('isLoggedIn');
@@ -91,6 +132,11 @@ export class AuthService {
           createdAt: Date.now(),
           lastLogin: Date.now(),
         };
+
+        // ✅ خزن محليًا
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('currentUser', JSON.stringify(user));
+
         this._currentUser.next(user);
         this._isAuthenticated.next(true);
         return user;
@@ -99,44 +145,61 @@ export class AuthService {
   }
 
   // --- Register ---
-  register(email: string, password: string, name: string): Observable<User> {
-    return from(
-      createUserWithEmailAndPassword(this.auth, email, password).then(async (res) => {
-        const user = res.user;
+  // auth.service.ts
+// auth.service.ts - Fixed register method
 
-        if (!user) throw new Error('User creation failed');
+register(email: string, password: string, name: string, profileImageURL?: string): Observable<User> {
+  return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(
+    switchMap((res) => {
+      const user = res.user;
+      if (!user) throw new Error('User creation failed');
 
-        // تحديث الاسم في Firebase Auth
-        await updateProfile(user, { displayName: name });
+      const newUser: User = {
+        uid: user.uid,
+        name: name || 'New User',
+        email,
+        phone: null,
+        country: null,
+        city: null,
+        profileImage: profileImageURL || null,
+        watchlist: [],
+        createdAt: Date.now(),
+        lastLogin: Date.now(),
+      };
 
-        // Firestore instance
-        // const db = getDatabase();
-        const db = getDatabase(getApp());
+      // تحديث الـ profile والـ database في نفس الوقت
+      const updateProfilePromise = updateProfile(user, { 
+        displayName: name, 
+        photoURL: profileImageURL || null 
+      }).catch(err => {
+        console.warn('Profile update failed:', err);
+      });
 
-        // إعداد بيانات المستخدم للحفظ
-        const newUser: User = {
-          uid: user.uid,
-          name: name || 'New User',
-          email: email,
-          phone: null,
-          country: null,
-          city: null,
-          profileImage: null,
-          watchlist: [], // مهم لتحديث count
-          createdAt: Date.now(),
-          lastLogin: Date.now(),
-        };
+      const db = getDatabase(getApp());
+      const saveToDbPromise = set(ref(db, `users/${user.uid}`), newUser);
 
-        // حفظ المستخدم في Firestore
-       await set(ref(db, `users/${user.uid}`), newUser);
-        // تحديث الـ BehaviorSubject
+      // ننتظر الاثنين يخلصوا
+      return from(Promise.all([updateProfilePromise, saveToDbPromise]).then(() => {
+        // حفظ بيانات المستخدم في localStorage
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('currentUser', JSON.stringify(newUser));
+
+        // ✅ حفظ رابط الصورة بشكل منفصل في localStorage
+        if (profileImageURL) {
+          localStorage.setItem('profileImageURL', profileImageURL);
+        }
+
+        // تحديث الحالة في BehaviorSubjects
         this._currentUser.next(newUser);
         this._isAuthenticated.next(true);
 
         return newUser;
-      })
-    );
-  }
+      }));
+    })
+  );
+}
+
+
 
   // --- Logout ---
   logout(): Observable<void> {
@@ -175,14 +238,31 @@ export class AuthService {
     });
   }
 
-  // --- Update profile ---
   updateProfile(updates: Partial<User>): Promise<void> {
     return new Promise((resolve, reject) => {
       const user = this.getCurrentUser();
       if (!user) return reject(new Error('No user logged in'));
-      const updatedUser = { ...user, ...updates };
+
+      // Merge carefully: keep all existing fields, overwrite only what's in updates
+      const updatedUser: User = {
+        uid: user.uid,
+        name: updates.name ?? user.name,
+        email: user.email, // email ثابت
+        phone: updates.phone ?? user.phone,
+        country: updates.country ?? user.country,
+        city: updates.city ?? user.city,
+        profileImage: updates.profileImage ?? user.profileImage,
+        watchlist: updates.watchlist ?? user.watchlist,
+        createdAt: user.createdAt,
+        lastLogin: user.lastLogin,
+      };
+
+      // Save to localStorage
       localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+      // Update observable
       this._currentUser.next(updatedUser);
+
       setTimeout(() => resolve(), 500);
     });
   }

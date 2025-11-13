@@ -2,7 +2,7 @@
   <div class="navbar-container">
     <!-- Logo Section - Left -->
     <div class="logo-section">
-      <a href="movies" class="logo-link">
+      <a [routerLink]="['/movies']" class="logo-link">
         <span class="logo-icon">🎬</span>
         <span class="logo-text">Movie App</span>
 
@@ -27,17 +27,22 @@
         </button>
       </mat-menu>
       <!-- Favorites Button -->
-      <a href="watchlist" class="watchlist-link">
+      <div class="watchlist-wrapper">
         <span class="watchlist-label" *ngIf="NumberwatchlistMovies > 0">
           {{ NumberwatchlistMovies }}
         </span>
 
-        <button mat-icon-button class="favorites-btn">
-          <mat-icon>
-            favorite_border
-          </mat-icon>
+        <button mat-icon-button class="favorites-btn" (click)="navigateToWatchlist()">
+          <mat-icon>favorite_border</mat-icon>
         </button>
-      </a>
+
+        <!-- رسالة تنبيه -->
+        <div class="login-alert" *ngIf="showLoginMessage" [@slideIn]>
+          <mat-icon class="alert-icon">lock</mat-icon>
+          <span>You must log in first.</span>
+        </div>
+      </div>
+
 
 
       <!-- User Section -->
@@ -52,11 +57,27 @@
           </button>
 
           <mat-menu #userMenu="matMenu" class="user-menu">
-            <button mat-menu-item [routerLink]="['/Profile']">
+            <!-- User Info Section -->
+            <div class="user-info-header">
+              <div class="user-avatar">
+                <img *ngIf="user.profileImage || getProfileImageFromLocalStorage(); else defaultAvatar"
+                  [src]="user.profileImage || getProfileImageFromLocalStorage()" alt="Profile" /><ng-template
+                  #defaultAvatar>
+                  <mat-icon>account_circle</mat-icon>
+                </ng-template>
+              </div>
+              <div class="user-details">
+                <p class="user-name">{{ user.name || 'User' }}</p>
+                <p class="user-email">{{ user.email }}</p>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+
+            <button mat-menu-item [routerLink]="['/profile']" (click)="navigateToProfile()">
               <mat-icon>person</mat-icon>
               <span>My Profile</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item (click)="navigateToWatchlist()">
               <mat-icon>favorite</mat-icon>
               <span>My Favorites</span>
             </button>
@@ -71,7 +92,7 @@
 
       <ng-template #loggedOut>
         <button mat-button class="login-btn" (click)="login()">Login</button>
-        <button mat-raised-button class="register-btn">Register</button>
+        <button mat-raised-button class="register-btn" [routerLink]="['/register']">Register</button>
       </ng-template>
     </div>
   </div>
@@ -103,10 +124,17 @@
         <div class="footer-section links-section">
           <h4 class="footer-title">Explore</h4>
           <ul class="footer-links horizontal-links">
-            <li><a href="Home">Home</a></li>
-            <li><a href="movies">Movies</a></li>
-            <li><a href="watchlist">Watchlist</a></li>
+            <li><a [routerLink]="['/Home']">Home</a></li>
+            <li><a [routerLink]="['/movies']">Movies</a></li>
+            <li><a href="#" (click)="navigateToWatchlist()">Watchlist</a></li>
           </ul>
+
+          <!-- رسالة تنبيه -->
+          <div class="login-alert" *ngIf="showLoginMessage" [@slideIn]>
+            <mat-icon class="alert-icon">lock</mat-icon>
+            <span>You must log in first.</span>
+          </div>
+
         </div>
       </div>
 

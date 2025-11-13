@@ -6,11 +6,12 @@ import { API } from '../../services/server/api';
 import { Location } from '@angular/common';
 import { MovieDisplay } from '../../services/Display/movie-display';
 import { forkJoin, combineLatest } from 'rxjs';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-watch-list',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, RouterLink],
   templateUrl: './watch-list.html',
   styleUrls: ['./watch-list.css'],
 })
