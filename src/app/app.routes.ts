@@ -1,4 +1,7 @@
 import { Routes } from '@angular/router';
+import { WatchList } from './components/watch-list/watch-list';
+import { AuthGuard } from './guards/auth.guard';
+import { AccountInfoComponent } from './components/account-info/account-info';
 
 export const routes: Routes = [
   {
@@ -20,19 +23,27 @@ export const routes: Routes = [
       import('./components/details/details').then(m => m.Details),
   },{
     path: 'watchlist',
-    loadComponent: () =>
-      import('./components/watch-list/watch-list').then(m => m.WatchList),
+    component: WatchList,
+    canActivate: [AuthGuard],
+    // loadComponent: () =>
+    //   import('./components/watch-list/watch-list').then(m => m.WatchList),
   },{
     path: 'profile',
-    loadComponent: () =>
-      import('./components/account-info/account-info').then(m => m.AccountInfoComponent),
+    component: AccountInfoComponent,
+    canActivate: [AuthGuard],
+    // loadComponent: () =>
+    //   import('./components/account-info/account-info').then(m => m.AccountInfoComponent),
   },
  {
   path:'error',
   loadComponent: () =>
+    import('./components/not-found/not-found').then(m => m.NotFoundComponent),
+ },{
+  path:'change-password',
+  loadComponent: () =>
     import('./components/reset-password/reset-password').then(m => m.ResetPasswordComponent),
  },
-  { path: '', redirectTo: 'error', pathMatch: 'full' }, 
+  { path: '', redirectTo: 'movies', pathMatch: 'full' }, 
   { path: '**', redirectTo: 'error' } 
   // { path: '', redirectTo: 'movies', pathMatch: 'full' },
   // { path: '**', redirectTo: 'movies' }

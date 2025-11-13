@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { API } from '../server/api';
 
@@ -7,7 +7,6 @@ import { API } from '../server/api';
   providedIn: 'root'
 })
 export class MovieDisplay {
-  // Observables
   private moviesSubject = new BehaviorSubject<any[]>([]);
   public movies$ = this.moviesSubject.asObservable();
 
@@ -29,39 +28,42 @@ export class MovieDisplay {
   private selectedGenreSubject = new BehaviorSubject<number | null>(null);
   public selectedGenre$ = this.selectedGenreSubject.asObservable();
 
-  private allMovies: any[] = [];
+  /** Cache لكل الصفحات: {page: movies[]} */
+  private cachedPages: Record<number, any[]> = {};
 
   constructor(private api: API) {
-  const savedLang = localStorage.getItem('selectedLanguage') || 'en';
-  this.languageSubject = new BehaviorSubject<string>(savedLang);
-  this.language$ = this.languageSubject.asObservable();
+    const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+    this.languageSubject = new BehaviorSubject<string>(savedLang);
+    this.language$ = this.languageSubject.asObservable();
 
-  // When the language changes, it reloads the same page.
-  this.language$.subscribe((lang) => {
-    this.loadGenres();
-    this.loadMovies(this.currentPageSubject.value);
-  });
-}
-
-  /** 
-   * Set language for UI only.
-   * Does NOT reload movies or genres automatically.
-   */
-setLanguage(lang: string) {
-  this.languageSubject.next(lang);
-  localStorage.setItem('selectedLanguage', lang);
-}
-
-  /** Set selected genre and reset page to 1 */
-  setGenre(genreId: number | null) {
-    this.selectedGenreSubject.next(genreId);
-    this.loadMovies(1); // reset to first page when genre changes
+    this.language$.subscribe((lang) => {
+      this.cachedPages = {}; // إعادة تعيين الكاش عند تغيير اللغة
+      this.loadGenres();
+      this.loadMovies(1);
+    });
   }
 
-  /** Fetch movies manually, uses current language and selected genre */
+  setLanguage(lang: string) {
+    this.languageSubject.next(lang);
+    localStorage.setItem('selectedLanguage', lang);
+  }
+
+  setGenre(genreId: number | null) {
+    this.selectedGenreSubject.next(genreId);
+    this.cachedPages = {}; // إعادة تعيين الكاش عند تغيير النوع
+    this.loadMovies(1);
+  }
+
   loadMovies(page: number = this.currentPageSubject.value) {
     const genreId = this.selectedGenreSubject.value;
     const language = this.languageSubject.value;
+
+    // لو الصفحة موجودة في الكاش، استخدمها مباشرة
+    if (this.cachedPages[page]) {
+      this.moviesSubject.next(this.cachedPages[page]);
+      this.currentPageSubject.next(page);
+      return;
+    }
 
     this.isLoadingSubject.next(true);
 
@@ -71,14 +73,13 @@ setLanguage(lang: string) {
     this.api.discoverMovies(filters, language)
       .pipe(finalize(() => this.isLoadingSubject.next(false)))
       .subscribe((res: any) => {
-        this.allMovies = res.results;
+        this.cachedPages[page] = res.results; // تخزين الصفحة في الكاش
         this.moviesSubject.next(res.results);
         this.currentPageSubject.next(res.page);
         this.totalPagesSubject.next(res.total_pages);
       });
   }
 
-  /** Fetch genres manually, uses current language */
   loadGenres() {
     const language = this.languageSubject.value;
     this.api.getGenres(language).subscribe((res: any) => {
@@ -86,7 +87,6 @@ setLanguage(lang: string) {
     });
   }
 
-  /** Pagination */
   nextPage() {
     const next = this.currentPageSubject.value + 1;
     if (next <= this.totalPagesSubject.value) this.loadMovies(next);
@@ -97,22 +97,20 @@ setLanguage(lang: string) {
     if (prev >= 1) this.loadMovies(prev);
   }
 
-  /** Filter movies locally without API call */
   filterMovies(title: string) {
+    const allMovies = Object.values(this.cachedPages).flat();
     if (!title) {
-      this.moviesSubject.next(this.allMovies);
+      this.moviesSubject.next(allMovies);
     } else {
-      const filtered = this.allMovies.filter(movie =>
+      const filtered = allMovies.filter(movie =>
         movie.title.toLowerCase().includes(title.toLowerCase())
       );
       this.moviesSubject.next(filtered);
     }
   }
 
-
   getMovieByIdWithVideos(id: number, lang?: string) {
-  const language = lang || this.languageSubject.value;
-  return this.api.getMovieByIdWithVideos(id, language);
-}
-
+    const language = lang || this.languageSubject.value;
+    return this.api.getMovieByIdWithVideos(id, language);
+  }
 }

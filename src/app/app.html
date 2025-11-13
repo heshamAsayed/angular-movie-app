@@ -5,7 +5,7 @@
       <a href="movies" class="logo-link">
         <span class="logo-icon">🎬</span>
         <span class="logo-text">Movie App</span>
-        
+
       </a>
     </div>
 
@@ -40,34 +40,39 @@
       </a>
 
 
-      <!-- User Section - Not Logged In -->
-      <ng-container *ngIf="!isLoggedIn">
+      <!-- User Section -->
+      <ng-container *ngIf="isLoggedIn$ | async; else loggedOut">
+        <ng-container *ngIf="currentUser$ | async as user">
+          <button mat-icon-button [matMenuTriggerFor]="userMenu" class="profile-btn">
+            <img *ngIf="user.profileImage; else defaultIcon" [src]="user.profileImage" alt="Profile"
+              class="profile-img" />
+            <ng-template #defaultIcon>
+              <mat-icon>account_circle</mat-icon>
+            </ng-template>
+          </button>
+
+          <mat-menu #userMenu="matMenu" class="user-menu">
+            <button mat-menu-item [routerLink]="['/Profile']">
+              <mat-icon>person</mat-icon>
+              <span>My Profile</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>favorite</mat-icon>
+              <span>My Favorites</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="logout()">
+              <mat-icon>logout</mat-icon>
+              <span>Logout</span>
+            </button>
+          </mat-menu>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #loggedOut>
         <button mat-button class="login-btn" (click)="login()">Login</button>
         <button mat-raised-button class="register-btn">Register</button>
-      </ng-container>
-
-      <!-- User Section - Logged In -->
-      <ng-container *ngIf="isLoggedIn">
-        <button mat-icon-button [matMenuTriggerFor]="userMenu" class="profile-btn">
-          <mat-icon>account_circle</mat-icon>
-        </button>
-
-        <mat-menu #userMenu="matMenu" class="user-menu">
-          <button mat-menu-item>
-            <mat-icon>person</mat-icon>
-            <span>My Profile</span>
-          </button>
-          <button mat-menu-item>
-            <mat-icon>favorite</mat-icon>
-            <span>My Favorites</span>
-          </button>
-          <mat-divider></mat-divider>
-          <button mat-menu-item (click)="logout()">
-            <mat-icon>logout</mat-icon>
-            <span>Logout</span>
-          </button>
-        </mat-menu>
-      </ng-container>
+      </ng-template>
     </div>
   </div>
 </mat-toolbar>

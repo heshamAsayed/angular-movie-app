@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/Authentication/auth.service';
+import { GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-register-page',
@@ -17,6 +19,7 @@ export class RegisterPage {
 
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
     this.form = this.fb.group({
+      name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirm: ['', [Validators.required]],
@@ -29,9 +32,9 @@ export class RegisterPage {
       return;
     }
 
-    const email = (this.form.value.email ?? '') as string;
-    const password = (this.form.value.password ?? '') as string;
-    const confirm = (this.form.value.confirm ?? '') as string;
+    const email = this.form.value.email ?? '';
+    const password = this.form.value.password ?? '';
+    const confirm = this.form.value.confirm ?? '';
 
     if (password !== confirm) {
       this.error = 'Passwords do not match';
@@ -40,19 +43,28 @@ export class RegisterPage {
 
     this.loading = true;
     this.error = '';
-    this.auth.register(email, password).subscribe({
-      next: (ok) => {
+
+    this.auth.register(email, password, this.form.value.name ?? '').subscribe({
+      next: (user) => {
         this.loading = false;
-        if (ok) {
-          this.router.navigate(['/login']);
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        this.loading = false;
+        // توضيح نوع الخطأ حسب Firebase
+        if (err.code === 'auth/email-already-in-use') {
+          this.error = 'Email already in use';
+        } else if (err.code === 'auth/weak-password') {
+          this.error = 'Password is too weak';
         } else {
-          this.error = 'Registration failed';
+          this.error = 'Server error, please try again';
         }
       },
-      error: () => {
-        this.loading = false;
-        this.error = 'Server error';
-      },
     });
+  }
+
+  loginWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    return from(signInWithPopup(this.auth.auth, provider).then((res) => res.user));
   }
 }

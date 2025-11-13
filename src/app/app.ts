@@ -15,6 +15,15 @@ import { MovieDisplay } from './services/Display/movie-display';
 import { WatchlistService } from './services/watchList/watchlist.service';
 import { AuthService } from './services/Authentication/auth.service';
 import { Router } from '@angular/router';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideDatabase, getDatabase } from '@angular/fire/database';
+import { provideStorage, getStorage } from '@angular/fire/storage';
+import { environment } from '../environments/environment';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { User } from './models/user.model';
+import { Observable } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +31,7 @@ import { Router } from '@angular/router';
   imports: [
     CommonModule,
     RouterOutlet,
+    RouterModule,
     NgIf,
     FormsModule,
     MatToolbarModule,
@@ -42,8 +52,9 @@ export class App implements OnInit {
   isLoggedIn = false;
   favoritesCount = 3;
   currentYear = new Date().getFullYear();
+  currentUser$: Observable<User | null>;
+
   public readonly isDarkMode = signal(localStorage.getItem('darkMode') === 'true');
-  // watchlistMovies : Set<number> =new Set();
   NumberwatchlistMovies: number = 0;
 
   /* cspell:disable */
@@ -57,7 +68,6 @@ export class App implements OnInit {
   };
   /* cspell:enable */
 
-  // languages array
   languages = [
     { code: 'en', label: 'English' },
     { code: 'ar', label: 'Arabic' },
@@ -65,10 +75,11 @@ export class App implements OnInit {
     { code: 'zh', label: 'Chinese' },
   ];
 
-  // Use last selected language from LocalStorage or default to first
   selectedLanguage =
     this.languages.find((l) => l.code === localStorage.getItem('selectedLanguage')) ||
     this.languages[0];
+
+  isLoggedIn$!: Observable<boolean>; // declare first
 
   constructor(
     private movieDisplay: MovieDisplay,
@@ -81,11 +92,28 @@ export class App implements OnInit {
 
     // Initialize service with selected language
     this.movieDisplay.setLanguage(this.selectedLanguage.code);
+
+    // Initialize observable properly here
+    this.isLoggedIn$ = this.authService.isAuthenticated$;
+
+    this.currentUser$ = this.authService.currentUser$;
   }
 
   ngOnInit(): void {
     this.watchlistService.watchlist$.subscribe((ids) => {
       this.NumberwatchlistMovies = ids.size;
+    });
+
+    this.NumberwatchlistMovies = 0;
+
+    // تابع الـ auth
+    this.authService.currentUser$.subscribe((user: any) => {
+      if (user) {
+        // المستخدم عامل login → جلب watchlist من الـ DB
+        this.watchlistService.watchlist$.subscribe((ids) => {
+          this.NumberwatchlistMovies = ids.size;
+        });
+      }
     });
   }
 
@@ -97,11 +125,11 @@ export class App implements OnInit {
       this.router.navigate(['/login']);
     }
   }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
-      this.isLoggedIn = true;
-
+    this.isLoggedIn = true;
   }
 
   toggleTheme = () => {
@@ -137,3 +165,12 @@ export class App implements OnInit {
     this.movieDisplay.setLanguage(language.code);
   }
 }
+
+bootstrapApplication(App, {
+  providers: [
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideDatabase(() => getDatabase()),
+        provideStorage(() => getStorage()),
+  ],
+});

@@ -65,7 +65,9 @@ export class MoveList implements OnInit {
   }
 
   prevPage() {
+   
     this.movieDisplay.prevPage();
+
   }
 
   // ⭐ غيّر الاسم والـ parameter type

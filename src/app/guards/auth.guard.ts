@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-// import { inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { AuthService } from '../services/Authentication/auth.service';
 // import { CanActivateFn, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-// import { map } from 'rxjs/operators';
-// import { AuthService } from '../services/Authentication/auth.service';
 
 import {
   CanActivate,
@@ -10,27 +10,21 @@ import {
   Router,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
-  UrlTree
+  UrlTree,
 } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AuthService } from '../services/Authentication/auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> {
     return this.authService.isAuthenticated$.pipe(
-      map(isAuthenticated => {
+      map((isAuthenticated) => {
         if (isAuthenticated) {
           return true;
         }
@@ -55,7 +49,7 @@ export const authGuard: CanActivateFn = (
   const router = inject(Router);
 
   return authService.isAuthenticated$.pipe(
-    map(isAuthenticated => {
+    map((isAuthenticated) => {
       if (isAuthenticated) {
         return true;
       }
