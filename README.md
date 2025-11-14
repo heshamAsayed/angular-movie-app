@@ -292,14 +292,15 @@ The API service `src/app/services/server/api.ts` contains helper methods that re
 
 ---
 
-## Developers & Supervisor
+## 👥 Development Team
 
-- Hesham Asayed — https://github.com/heshamAsayed
-- (Add other developers here)
+### Developers
 
-Supervisor:
+**[Mohamed Galal](https://github.com/MohamedGll), [Mohamed Nasser](https://github.com/Mohammed20367), [Ahmed Fawzy](https://github.com/ahmed-fawzy2000), [Andrew Nassim](https://github.com/andrew-nassim), [Hesham Ahmed](https://github.com/heshamAsayed)**
 
-- Hassan Eldash — https://github.com/hassaneldash
+### Supervisor
+
+**[Hassan Eldash](https://github.com/hassaneldash)**
 
 ---
 
@@ -335,3 +336,5 @@ Other major integrations:
   - Add a quick `CONTRIBUTING.md` with developer setup instructions
 
 ---
+
+
