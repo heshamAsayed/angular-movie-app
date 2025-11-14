@@ -16,7 +16,7 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () =>
       import('./components/home/home').then((m) => m.Home),
-    title: 'Home - Movie Hub'
+    title: 'Home - Moviey Watch'
   },
   {
     path: 'movies',
@@ -27,19 +27,20 @@ export const routes: Routes = [
     path: 'details/:id',
     loadComponent: () =>
       import('./components/details/details').then((m) => m.Details),
-	  title: 'Movie Details - Movie Hub'
+	  title: 'Movie Details - Moviey Watch'
   },
   {
     path: 'group-movies/:category',
     loadComponent: () =>
       import('./components/group-movies/group-movies').then((m) => m.GroupMovies),
-    title: 'Movies - Movie Hub'
+    title: 'Movies - Moviey Watch'
   },
   {
     path: 'watchlist',
     loadComponent: () =>
       import('./components/watch-list/watch-list').then((m) => m.WatchList),
     canActivate: [AuthGuard],
+	title: 'watch list - Moviey Watch'
   },
   {
     path: 'profile',
@@ -48,6 +49,7 @@ export const routes: Routes = [
         (m) => m.AccountInfoComponent
       ),
     canActivate: [AuthGuard],
+	title: 'profile - Moviey Watch'
   },
   {
     path: 'change-password',
