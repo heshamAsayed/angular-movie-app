@@ -840,3 +840,16 @@
     font-size: 0.8rem;
   }
 }
+
+.logo-section .logo-link {
+  display: flex; 
+  align-items: center;
+}
+
+.logo-icon-img {
+  width: 32px;   /* حجم مشابه للـ emoji */
+  height: 32px;
+  object-fit: contain;
+  margin-right: 8px; /* مسافة بين الصورة والنص */
+  margin-right: 0;
+}

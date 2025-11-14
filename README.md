@@ -1,4 +1,4 @@
-# Movie App (Angular Movie Hub)
+# Moviey Watch (Angular Movie Hub)
 
 [Live demo](https://heshamasayed.github.io/angular-movie-app/)
 
@@ -24,7 +24,7 @@
 
 ## Project Overview
 
-Movie App ("Movie Hub") is an Angular-based application that lets users browse movie information (from TMDB), watch trailers, add movies to a personal watchlist (persisted in Firebase), authenticate via Firebase, and explore movie details (cast, recommended, similar movies, providers, videos, etc.). It is designed to be responsive, accessible, and themeable (light/dark).
+Moviey Watch ("Movie Hub") is an Angular-based application that lets users browse movie information (from TMDB), watch trailers, add movies to a personal watchlist (persisted in Firebase), authenticate via Firebase, and explore movie details (cast, recommended, similar movies, providers, videos, etc.). It is designed to be responsive, accessible, and themeable (light/dark).
 
 - Framework: Angular
 - Angular version: ^20.x (see `package.json`)
