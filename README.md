@@ -1,219 +1,351 @@
-# 🎬 Movie App - Angular Application
+# Movie App (Angular Movie Hub)
 
-![Angular](https://img.shields.io/badge/Angular-20.3.0-red?style=for-the-badge\&logo=angular)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9.2-blue?style=for-the-badge\&logo=typescript)
-![Material Design](https://img.shields.io/badge/Material-20.2.12-blue?style=for-the-badge\&logo=material-design)
-
-A modern web application built with Angular 20 for browsing and exploring movies through a beautiful and user-friendly interface.
+[Live demo](https://heshamasayed.github.io/angular-movie-app/)
 
 ---
 
-## 🚀 Getting Started
+## Table of Contents
 
-### Prerequisites
+- [Project Overview](#project-overview)
+- [Demo Link](#demo-link)
+- [Dependencies & Versions](#dependencies--versions)
+- [Local Setup Instructions](#local-setup-instructions)
+- [Environment Variables](#environment-variables)
+- [Features / Functionalities](#features--functionalities)
+- [Color System](#color-system)
+- [Screenshots](#screenshots)
+- [Folder Structure](#folder-structure)
+- [Data Models](#data-models)
+- [Developers & Supervisor](#developers--supervisor)
+- [Dependency Tree (Optional)](#dependency-tree-optional)
+- [License & Notes](#license--notes)
 
-* **Node.js**: Version 18.x or higher
-* **npm**: Version 9.x or higher (comes with Node.js)
-* **Angular CLI**: Will be installed automatically with the project
+---
 
-### Installation & Running
+## Project Overview
 
-#### Step 1: Clone the Repository
+Movie App ("Movie Hub") is an Angular-based application that lets users browse movie information (from TMDB), watch trailers, add movies to a personal watchlist (persisted in Firebase), authenticate via Firebase, and explore movie details (cast, recommended, similar movies, providers, videos, etc.). It is designed to be responsive, accessible, and themeable (light/dark).
+
+- Framework: Angular
+- Angular version: ^20.x (see `package.json`)
+- TypeScript version: ~5.9.x (see `package.json`)
+- Angular Material version: ^20.x (see `package.json`)
+
+This README was generated from the repository contents and package manifest in this project.
+
+---
+
+## Demo Link
+
+Try the live demo here:
+
+https://heshamasayed.github.io/angular-movie-app/
+
+---
+
+## Dependencies & Versions
+
+The following dependencies were detected in `package.json` (root). These are the installed packages the app depends on.
+
+### Runtime dependencies (`dependencies`)
+
+- @angular/animations: ^20.3.10
+- @angular/cdk: ^20.2.12
+- @angular/common: ^20.3.0
+- @angular/compiler: ^20.3.0
+- @angular/core: ^20.3.0
+- @angular/fire: ^20.0.1
+- @angular/forms: ^20.3.0
+- @angular/material: ^20.2.12
+- @angular/platform-browser: ^20.3.0
+- @angular/router: ^20.3.0
+- bootstrap: ^5.3.8
+- firebase: ^12.5.0
+- rxjs: ~7.8.0
+- tslib: ^2.3.0
+- zone.js: ~0.15.0
+
+### Development dependencies (`devDependencies`)
+
+- @angular/build: ^20.3.7
+- @angular/cli: ^20.3.7
+- @angular/compiler-cli: ^20.3.0
+- @types/jasmine: ~5.1.0
+- jasmine-core: ~5.9.0
+- karma: ~6.4.0
+- karma-chrome-launcher: ~3.2.0
+- karma-coverage: ~2.2.0
+- karma-jasmine: ~5.1.0
+- karma-jasmine-html-reporter: ~2.1.0
+- typescript: ~5.9.2
+
+> Note: Exact installed versions may differ if `package-lock.json` exists with resolutions; running `npm ci` will install lockfile versions.
+
+---
+
+## Local Setup Instructions
+
+Follow these steps to run the project locally.
+
+1. Prerequisites
+
+- Node.js (recommended v18 or v20 LTS)
+- npm (comes with Node.js)
+- Angular CLI (optional, but handy): `npm install -g @angular/cli`
+
+2. Install dependencies
 
 ```bash
-git clone https://github.com/heshamAsayed/angular-movie-app.git
-cd angular-movie-app
-```
-
-#### Step 2: Install Dependencies
-
-**⚠️ Important:** You **MUST** run `npm install` first to install all required packages including Angular Material v20.
-
-```bash
+cd path/to/angular-movie-app-master
 npm install
 ```
 
-This will install all required packages:
+3. Configure environment (see next section)
 
-* Angular Core & CLI (v20.3.0)
-* Angular Material (v20.2.12)
-* Angular CDK (v20.2.12)
-* RxJS
-* And other required dependencies
-
-#### Step 3: Start Development Server
+4. Run the dev server
 
 ```bash
 ng serve
-# or
+# or using npm script
 npm start
 ```
 
-Open your browser and navigate to `http://localhost:4200`. The application will automatically reload whenever you modify any source files.
+Open http://localhost:4200 in your browser.
 
-#### Step 4: Build for Production
+5. Build for production
 
 ```bash
-ng build
+ng build --configuration production
 # or
 npm run build
 ```
 
-The build artifacts will be stored in the `dist/` directory, optimized for production.
-
----
-
-## ✨ Features
-
-* 🎬 **Movie Browsing**: Explore a wide range of movies with comprehensive details
-* 🔍 **Search & Filter**: Search movies by title and filter by genre
-* 📱 **Responsive Design**: Works perfectly on all devices
-* 🌙 **Light/Dark Mode**: Easy switching between modes with preference saving
-* 🌍 **Multi-language Support**: Support for English, Arabic, French, and Chinese
-* ⭐ **Rating System**: Visual movie rating display
-* 💾 **Watchlist**: Save favorite movies to watchlist
-* 🎨 **Material Design UI**: Modern UI using Angular Material v20
-* ⚡ **High Performance**: Fast loading and instant responsiveness
-
----
-
-## 👥 Development Team
-
-### Developers
-
-**[Mohamed Galal](https://github.com/MohamedGll), [Mohamed Nasser](https://github.com/Mohammed20367), [Ahmed Fawzy](https://github.com/ahmed-fawzy2000), [Andrew Nassim](https://github.com/andrew-nassim), [Hesham Ahmed](https://github.com/heshamAsayed)**
-
-### Supervisor
-
-* **Hassan Eldash**
-
----
-
-## 🎨 Color System & Customization
-
-### Overview
-
-The project uses a color system based on **CSS Variables** for easy customization and switching between light and dark modes. All colors are documented in `custom-theme.scss`.
-
-### Light Mode Colors
-
-#### Primary Colors
-
-```css
---primary-color: #1565c0;    /* Primary color */
---accent-color: #d81b60;     /* Secondary color */
---warn-color: #d32f2f;       /* Warning color */
-```
-
-#### Background Colors
-
-```css
---surface-bg: #ffffff;       /* Page background */
---card-bg: #fafafa;          /* Card background */
---hover-overlay: rgba(21, 101, 192, 0.06);  /* Hover overlay */
-```
-
-#### Text Colors
-
-```css
---primary-text: #000000;     /* Primary text */
---secondary-text: #424242;   /* Secondary text */
---muted-text: #757575;       /* Muted text */
-```
-
-### Dark Mode Colors
-
-#### Background Colors
-
-```css
---surface-bg: #0f1419;       /* Page background (blue-black) */
---card-bg: #1a1f29;          /* Card background (dark gray) */
---hover-overlay: rgba(100, 181, 246, 0.08);  /* Hover overlay */
-```
-
-#### Text Colors
-
-```css
---primary-text: #ffffff;     /* Primary text (white) */
---secondary-text: #e0e0e0;   /* Secondary text (light gray) */
---muted-text: #9e9e9e;       /* Muted text (medium gray) */
-```
-
-### How to Customize Colors
-
-#### Method 1: Edit `custom-theme.scss`
-
-Open `src/custom-theme.scss` and modify the variables in the `:root` section for light mode or `.dark-mode` for dark mode.
-
-```scss
-:root {
-  --primary-color: #your-color-here;
-  --surface-bg: #your-background-color;
-  --primary-text: #your-text-color;
-}
-
-.dark-mode {
-  --primary-color: #your-dark-color;
-  --surface-bg: #your-dark-background;
-  --primary-text: #your-dark-text;
-}
-```
-
-#### Method 2: Use Variables in CSS
-
-In any CSS or SCSS file, use the variables directly:
-
-```css
-.my-component {
-  background-color: var(--surface-bg);
-  color: var(--primary-text);
-  border: 1px solid var(--card-border);
-}
-```
-
-#### Method 3: Toggle Between Modes
-
-Switching between light and dark modes happens automatically when clicking the toggle button in the navigation bar. The preference is automatically saved in `localStorage`.
-
----
-
-## 📜 Available Commands
+6. Run tests
 
 ```bash
-# Development
-ng serve              # Start development server
-npm start             # Start development server
-ng build              # Build for development
-npm run watch         # Build with watch mode
-
-# Production
-ng build --configuration production  # Build for production
-
-# Testing
-ng test               # Run unit tests
-npm test              # Run unit tests
-
-# Code Generation
-ng generate component component-name  # Generate new component
-ng generate service service-name      # Generate new service
+npm test
 ```
 
 ---
 
-## 🛠️ Technologies Used
+## Environment Variables
 
-* **Angular 20.3.0**: Core framework
-* **TypeScript 5.9.2**: Programming language
-* **Angular Material 20.2.12**: UI components
-* **RxJS 7.8.0**: Reactive programming
-* **Angular CDK 20.2.12**: Angular tools
+The project integrates with two external services:
+
+1. The Movie Database (TMDB) API
+2. Firebase (Realtime DB / Authentication / Storage)
+
+Configuration locations:
+
+- `src/environments/environment.ts` (development)
+- `src/environments/environment.prod.ts` (production)
+
+Examples found in this repository include a TMDB API key and Firebase configuration directly inside these environment files. Replace them with your own values for security when deploying to public repositories.
+
+Important keys to set:
+
+- TMDB API key: used in `src/app/services/server/api.ts` (the `apiKey` property). Replace the `apiKey` value with your own TMDB key from https://www.themoviedb.org/settings/api
+
+- Firebase config: the `environment.firebase` object should contain your project's `apiKey`, `authDomain`, `projectId`, `storageBucket`, `messagingSenderId`, and `appId`. These are used by `@angular/fire`.
+
+Security note:
+
+- Do not commit production keys to public repositories. For CI / deployments use environment variables or secret managers and replace values at build time (or use a build-time environment file replacement).
 
 ---
 
-## 📄 License
+## Features / Functionalities
 
-This project is licensed under the MIT License.
+- Browse movies: trending, popular, now playing, top rated, upcoming
+- Movie details: overview, runtime, release date, genres, videos (trailers), cast & crew
+- Search by title with pagination
+- Recommendations & similar movies
+- Watch providers lookup
+- Watchlist: authenticated users can add/remove movies from a personal watchlist (persisted in Firebase)
+- Authentication: Firebase Auth (email/password + social providers flows prepared)
+- Dark / Light theme toggle with CSS variables and Angular Material theming
+- Responsive layout (desktop/tablet/mobile)
+- Multi-language support (language passed to TMDB calls)
+- Lazy loading of assets and images (project contains a `lazy-load` directive)
+- Small UX niceties: autoplay videos component, card hover effects, rating badges
 
 ---
 
-**⭐ If you like this project, don't forget to give it a star!**
+## Color System
+
+This project centralizes theme colors in `src/custom-theme.scss`.
+
+- The file defines Angular Material themes (`$light-theme`, `$dark-theme`) and registers them.
+- It also defines many CSS custom properties (`--primary-color`, `--card-bg`, `--rating-high`, etc.) inside `:root` and `.dark-mode` for the dark theme.
+
+To change colors quickly:
+
+1. Edit the variables at the top of `src/custom-theme.scss` (or update the `:root` custom properties).
+2. Rebuild the app or use the dev server to see changes (`ng serve`).
+
+Examples:
+
+- Change primary color: update `--primary-color` or the `$primary-palette` values in `custom-theme.scss`.
+- Toggle dark mode: add/remove the `dark-mode` class on the `body` or root element.
+
+---
+
+## Screenshots
+
+Place screenshot images inside `docs/screenshots/` (create the folder if it doesn't exist). The README references the following files:
+
+- `docs/screenshots/homepage-featured.png` — Homepage / Featured movies section
+- `docs/screenshots/movie-details.png` — Movie Details page
+- `docs/screenshots/login.png` — Login page
+
+Example markdown to include images (already used below):
+
+![Homepage — Featured movies](docs/screenshots/homepage-featured.png)
+*Homepage — Featured movies.*
+
+![Movie Details](docs/screenshots/movie-details.png)
+*Movie Details page with cast & recommended movies.*
+
+![Login](docs/screenshots/login.png)
+*Login / Sign-in screen.*
+
+> Note: The repository contains screenshots you can copy into the `docs/screenshots/` folder. If you prefer a different location, update the paths accordingly.
+
+---
+
+## Folder Structure
+
+Top-level source structure (important files & folders):
+
+```
+src/
+  app/
+    components/        # UI components (home, details, login, register, watch-list, etc.)
+    directives/        # custom directives (e.g., lazy-load)
+    guards/            # route guards (e.g., auth.guard.ts)
+    models/            # data model types (user, watchlist item, etc.)
+    services/          # API, auth, watchlist, display services
+    app.ts, app.routes.ts, app.config.ts
+  assets/               # static files (images, videos)
+  environments/         # environment.ts / environment.prod.ts
+  main.ts
+  index.html
+  styles.css
+custom-theme.scss       # project-level theming (Angular Material + CSS vars)
+```
+
+---
+
+## Data Models
+
+The repository defines a `User` model in `src/app/models/user.model.ts`. Key structures:
+
+### User
+
+```ts
+export interface User {
+  uid?: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  country: string | null;
+  city: string | null;
+  profileImage: string | null;
+  watchlist: WatchlistItem[] | null;
+  createdAt: number;
+  lastLogin?: number;
+}
+```
+
+### WatchlistItem
+
+```ts
+export interface WatchlistItem {
+  movieId: string;
+  title: string;
+  poster: string;
+  addedAt: number;
+  releaseDate: string;
+  rating: number;
+}
+```
+
+### Movie object (TMDB)
+
+Movie objects in this app come from The Movie Database (TMDB) API. Typical relevant fields used across the app:
+
+- `id` (number)
+- `title` / `name` (string)
+- `overview` (string)
+- `release_date` (string)
+- `runtime` (number)
+- `poster_path` / `backdrop_path` (string) — combined with TMDB base image URL
+- `genres` (array)
+- `vote_average` (number)
+- `vote_count` (number)
+- `popularity` (number)
+- `videos` (object) — trailers & clips
+- `credits` (object) — cast & crew
+- `recommendations` / `similar` (arrays)
+
+The API service `src/app/services/server/api.ts` contains helper methods that return these combined responses (for example `getMovieByIdWithVideos` or `getMovieFullDetailsWithAppend`).
+
+---
+
+## Developers & Supervisor
+
+- Hesham Asayed — https://github.com/heshamAsayed
+- (Add other developers here)
+
+Supervisor:
+
+- Hassan Eldash — https://github.com/hassaneldash
+
+---
+
+## Dependency Tree (Optional)
+
+A simplified dependency map of major libraries used by the app:
+
+```
+Angular (core @angular/* v20)
+├─ @angular/platform-browser
+├─ @angular/router
+├─ @angular/forms
+├─ @angular/animations
+├─ RxJS (~7.8)
+├─ Zone.js (~0.15)
+└─ Angular Material (@angular/material v20)
+   ├─ Angular CDK (@angular/cdk v20)
+   └─ Material theming utilities
+
+Other major integrations:
+├─ @angular/fire -> Firebase SDK (firebase v12)
+└─ Bootstrap (v5) for some responsive helpers
+```
+
+---
+
+## Notes & Next Steps
+
+- Security: rotate or remove API keys before publishing to public repos. Prefer environment injection (CI secrets, `.env` replacement at build time, or Angular file replacements with non-committed files).
+- If you want, I can:
+  - Create a `.env.example` and update `environment.ts` to read from it (with an appropriate build adjustment)
+  - Add a GitHub Actions workflow to build and deploy to GitHub Pages (the repo already has a `gh-pages` branch)
+  - Add a quick `CONTRIBUTING.md` with developer setup instructions
+
+---
+
+## License & Attribution
+
+Include any license information here (not set by default). Make sure to check third-party assets (images, videos) licensing before publishing.
+
+---
+
+If you want, I can now:
+
+- Commit this `README.md` to the repository
+- Create the `docs/screenshots/` folder and place placeholder files (or import provided screenshots)
+- Add `.env.example` for secrets
+
+Tell me which of the above you'd like me to do next.
