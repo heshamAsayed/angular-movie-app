@@ -71,7 +71,7 @@
       <div class="movie-info">
         <h3 class="movie-title" [title]="movie.title">{{ movie.title }}</h3>
 
-        <div class="movie-meta">
+        <div class="movie-meta align-item-center">
           <span class="release-date">
             <mat-icon>calendar_today</mat-icon>
             {{ movie.release_date | date: 'yyyy' }}
@@ -80,7 +80,12 @@
             <mat-icon>trending_up</mat-icon>
             {{ movie.popularity | number: '1.0-0' }}
           </span>
-        </div>
+          <span class="votes">
+              <mat-icon>thumb_up</mat-icon>
+              <!-- Votes -->
+                  {{ movie.vote_count }}
+          </span>
+         </div>
 
         <p class="movie-overview">{{ movie.overview }}</p>
 
@@ -96,10 +101,6 @@
             <span class="rating-text">{{ movie.vote_average }}/10</span>
           </div>
 
-          <div class="stat-item">
-            <span class="stat-label">Votes</span>
-            <span class="stat-value">{{ movie.vote_count | number }}</span>
-          </div>
         </div>
 
         <!-- Action Buttons -->
@@ -110,10 +111,11 @@
             <mat-icon>{{ isInWatchlist(movie.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
           </button>
 
-            <button mat-stroked-button color="primary" class="btn-details" (click)="viewDetails(movie)" aria-label="View details for {{ movie.title }}">
-              <mat-icon aria-hidden="true">info</mat-icon>
-              <span class="btn-text">Details</span>
-            </button>
+          <button mat-stroked-button color="primary" class="btn-details" (click)="viewDetails(movie)"
+            aria-label="View details for {{ movie.title }}">
+            <mat-icon aria-hidden="true">info</mat-icon>
+            <span class="btn-text">Details</span>
+          </button>
         </div>
       </div>
     </div>
@@ -128,21 +130,37 @@
 
   <!-- Pagination -->
   <!-- <div class="pagination" *ngIf="!(isLoading$ | async) && (movies$ | async)?.length > 0"> -->
+   <!-- Pagination -->
+  <!-- Block Pagination: Shows pages in groups of 10 -->
   <div class="pagination" *ngIf="!(isLoading$ | async) && ((movies$ | async)?.length ?? 0) > 0">
-    <button mat-button (click)="prevPage()" [disabled]="(currentPage$ | async) === 1">
+
+    <!-- Previous Block -->
+    <button mat-button class="block-btn"
+            (click)="prevBlock()"
+            [disabled]="currentBlockStart === 1">
       <mat-icon>chevron_left</mat-icon>
-      Previous
+      Prev
     </button>
 
-    <div class="page-info">
-      <span class="current-page">{{ (currentPage$ | async) ?? 1 }}</span>
-      <span class="separator">/</span>
-      <span class="total-pages">{{ (totalPages$ | async) ?? 0 }}</span>
+    <!-- Page Numbers (10 per block) -->
+    <div class="pages-container" >
+      <button mat-stroked-button
+              *ngFor="let page of currentBlockPages"
+              class="page-number"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
     </div>
 
-    <button mat-button (click)="nextPage()" [disabled]="(currentPage$ | async) === (totalPages$ | async)">
-      Next
+    <!-- Next Block -->
+    <button mat-button class="block-btn"
+            (click)="nextBlock()"
+            [disabled]="currentBlockStart + pagesPerBlock > totalPages">
+      Next 
       <mat-icon>chevron_right</mat-icon>
     </button>
+
   </div>
+
 </div>

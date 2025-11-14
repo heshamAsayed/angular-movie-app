@@ -148,4 +148,57 @@ export class API {
     return this.http.get(`${this.baseUrl}/movie/${id}/similar`, { params });
   }
 
+
+  // get TMDB configuration (base image urls + sizes)
+getConfiguration(): Observable<any> {
+  const params = new HttpParams().set('api_key', this.apiKey);
+  return this.http.get(`${this.baseUrl}/configuration`, { params });
+}
+
+// watch/providers
+getMovieWatchProviders(id: number, language: string = 'en'): Observable<any> {
+  const params = new HttpParams()
+    .set('api_key', this.apiKey)
+    .set('language', language);
+  return this.http.get(`${this.baseUrl}/movie/${id}/watch/providers`, { params });
+}
+
+// person details (useful when user clicks actor)
+getPersonDetails(personId: number, language: string = 'en'): Observable<any> {
+  const params = new HttpParams()
+    .set('api_key', this.apiKey)
+    .set('language', language);
+  return this.http.get(`${this.baseUrl}/person/${personId}`, { params });
+}
+
+// person images (profiles)
+getPersonImages(personId: number): Observable<any> {
+  const params = new HttpParams().set('api_key', this.apiKey);
+  return this.http.get(`${this.baseUrl}/person/${personId}/images`, { params });
+}
+
+// movie reviews (for showing snippet under details)
+getMovieReviews(id: number, page: number = 1, language: string = 'en'): Observable<any> {
+  const params = new HttpParams()
+    .set('api_key', this.apiKey)
+    .set('page', page.toString())
+    .set('language', language);
+  return this.http.get(`${this.baseUrl}/movie/${id}/reviews`, { params });
+}
+
+// movie external ids (imdb_id etc)
+getMovieExternalIds(id: number): Observable<any> {
+  const params = new HttpParams().set('api_key', this.apiKey);
+  return this.http.get(`${this.baseUrl}/movie/${id}/external_ids`, { params });
+}
+
+// convenience: full details in one request (append_to_response)
+getMovieFullDetailsWithAppend(id: number, language: string = 'en'): Observable<any> {
+  const params = new HttpParams()
+    .set('api_key', this.apiKey)
+    .set('language', language)
+    .set('append_to_response', 'videos,credits,recommendations,similar,images');
+  return this.http.get(`${this.baseUrl}/movie/${id}`, { params });
+}
+
 }

@@ -76,12 +76,12 @@
 </ng-template>
 
 <!-- Add this section after the trailer section and before closing </div></div></div> -->
-
+<!-- 
 <ng-container *ngIf="recommendations && recommendations.length > 0">
     <h3 class="section-title">Recommended Movies</h3>
     
     <div class="recommendations-container">
-        <!-- First Row -->
+       
         <div class="recommendations-row">
             <button class="scroll-btn scroll-left" (click)="scrollRow('left', 0)" *ngIf="showScrollButtons[0]?.left">
                 <mat-icon>chevron_left</mat-icon>
@@ -117,7 +117,7 @@
             </button>
         </div>
 
-        <!-- Second Row -->
+        
         <div class="recommendations-row">
             <button class="scroll-btn scroll-left" (click)="scrollRow('left', 1)" *ngIf="showScrollButtons[1]?.left">
                 <mat-icon>chevron_left</mat-icon>
@@ -153,4 +153,121 @@
             </button>
         </div>
     </div>
-</ng-container>
+</ng-container> -->
+
+
+<!-- Movie Credits (Cast & Crew) -->
+<div class="credits-section mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-title">Cast & Crew</h2>
+        <a (click)="navigateToGroupVideos('credits')" class="view-all-link" style="cursor: pointer;">
+            View All <span class="material-icons">arrow_forward</span>
+        </a>
+
+    </div>
+
+    <div class="horizontal-scroll-container">
+        <button mat-icon-button class="scroll-btn scroll-btn-left" (click)="scrollLeft('credits')">
+            <span class="material-icons">chevron_left</span>
+        </button>
+
+        <div class="horizontal-scroll" #creditsScroll>
+            <div class="credit-card" *ngFor="let cast of movieCredits?.cast?.slice(0, 10)">
+                <div class="credit-image">
+                    <img [src]="cast.profile_path ? 'https://image.tmdb.org/t/p/w185' + cast.profile_path : 'assets/no-image.png'"
+                        [alt]="cast.name">
+                </div>
+                <div class="credit-info">
+                    <h4>{{ cast.name }}</h4>
+                    <p>{{ cast.character }}</p>
+                </div>
+            </div>
+        </div>
+
+        <button mat-icon-button class="scroll-btn scroll-btn-right" (click)="scrollRight('credits')">
+            <span class="material-icons">chevron_right</span>
+        </button>
+    </div>
+</div>
+
+<!-- Recommended Movies -->
+<div class="recommendations-section mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-title">Recommended Movies</h2>
+        <a (click)="navigateToGroupVideos('recommendations')" class="view-all-link" style="cursor: pointer;">
+            View All <span class="material-icons">arrow_forward</span>
+        </a>
+    </div>
+
+    <div class="horizontal-scroll-container">
+        <button mat-icon-button class="scroll-btn scroll-btn-left" (click)="scrollLeft('recommendations')">
+            <span class="material-icons">chevron_left</span>
+        </button>
+
+        <div class="horizontal-scroll" #recommendationsScroll>
+            <div class="movie-card" *ngFor="let rec of recommendations" (click)="navigateToMovie(rec.id)">
+                <div class="movie-poster">
+                    <img [src]="'https://image.tmdb.org/t/p/w500' + rec.poster_path" [alt]="rec.title">
+                    <div class="play-overlay">
+                        <span class="material-icons">play_circle_outline</span>
+                    </div>
+                </div>
+                <div class="movie-info">
+                    <h4>{{ rec.title }}</h4>
+                    <div class="movie-meta">
+                        <span class="rating">
+                            <span class="material-icons">star</span>
+                            {{ rec.vote_average | number: '1.1-1' }}
+                        </span>
+                        <span class="year">{{ rec.release_date | date:'yyyy' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button mat-icon-button class="scroll-btn scroll-btn-right" (click)="scrollRight('recommendations')">
+            <span class="material-icons">chevron_right</span>
+        </button>
+    </div>
+</div>
+
+<!-- Similar Movies -->
+<div class="similar-section mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-title">Similar Movies</h2>
+        <a (click)="navigateToGroupVideos('similar')" class="view-all-link" style="cursor: pointer;">
+            View All <span class="material-icons">arrow_forward</span>
+        </a>
+    </div>
+
+    <div class="horizontal-scroll-container">
+        <button mat-icon-button class="scroll-btn scroll-btn-left" (click)="scrollLeft('similar')">
+            <span class="material-icons">chevron_left</span>
+        </button>
+
+        <div class="horizontal-scroll" #similarScroll>
+            <div class="movie-card" *ngFor="let similar of similarMovies" (click)="navigateToMovie(similar.id)">
+                <div class="movie-poster">
+                    <img [src]="'https://image.tmdb.org/t/p/w500' + similar.poster_path" [alt]="similar.title">
+                    <div class="play-overlay">
+                        <span class="material-icons">play_circle_outline</span>
+                    </div>
+                </div>
+                <div class="movie-info">
+                    <h4>{{ similar.title }}</h4>
+                    <div class="movie-meta">
+                        <span class="rating">
+                            <span class="material-icons">star</span>
+                            {{ similar.vote_average | number: '1.1-1' }}
+                        </span>
+                        <span class="year">{{ similar.release_date | date:'yyyy' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button mat-icon-button class="scroll-btn scroll-btn-right" (click)="scrollRight('similar')">
+            <span class="material-icons">chevron_right</span>
+        </button>
+    </div>
+</div>

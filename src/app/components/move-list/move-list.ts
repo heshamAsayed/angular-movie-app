@@ -107,6 +107,43 @@ export class MoveList implements OnInit {
       this.watchlist = new Set(JSON.parse(saved));
     }
   }
+totalPages = 500;
+pagesPerBlock = 10;
+
+get currentBlockStart(): number {
+  return Math.floor((this.currentPage - 1) / this.pagesPerBlock) * this.pagesPerBlock + 1;
+}
+
+get currentBlockPages(): number[] {
+  return Array.from(
+    { length: this.pagesPerBlock },
+    (_, i) => this.currentBlockStart + i
+  ).filter(p => p <= this.totalPages);
+}
+
+goToPage(page: number) {
+  this.currentPage = page; // حدّث الصفحة الحالية
+  this.movieDisplay.loadMovies(page); // حدث الـ service بالصفحة الجديدة
+  // this.movieDisplay.loadMovies();   // جلب الأفلام للصفحة الجديدة
+}
+
+nextBlock() {
+  const next = this.currentBlockStart + this.pagesPerBlock;
+  if (next <= this.totalPages) {
+    this.currentPage = next;
+    this.movieDisplay.loadMovies();
+
+  }
+}
+
+prevBlock() {
+  const prev = this.currentBlockStart - this.pagesPerBlock;
+  if (prev >= 1) {
+    this.currentPage = prev;
+    this.movieDisplay.loadMovies();
+
+  }
+}
 
 
 }

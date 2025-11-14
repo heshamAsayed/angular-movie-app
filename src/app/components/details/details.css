@@ -614,3 +614,364 @@
     display: none;
   }
 }
+
+/* Credits Section */
+.credits-section {
+  margin-top: 3rem;
+}
+
+.credit-card {
+  min-width: 150px;
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.credit-card:hover {
+  transform: translateY(-5px);
+}
+
+.credit-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.credit-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.credit-info h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #fff;
+}
+
+.credit-info p {
+  font-size: 0.8rem;
+  color: #999;
+  margin: 0;
+}
+
+/* Section Styling */
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.view-all-link {
+  color: #e50914;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.view-all-link:hover {
+  color: #ff0a16;
+}
+
+.view-all-link .material-icons {
+  font-size: 1.2rem;
+  margin-left: 0.25rem;
+}
+
+/* Horizontal Scroll Container */
+.horizontal-scroll-container {
+  position: relative;
+}
+
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Scroll Buttons */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  width: 50px;
+  height: 50px;
+}
+
+.scroll-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.scroll-btn-left {
+  left: 0;
+}
+
+.scroll-btn-right {
+  right: 0;
+}
+/* Credits Section */
+.credits-section {
+  margin-top: 3rem;
+  padding: 0 2rem;
+}
+
+.credit-card {
+  min-width: 150px;
+  margin-right: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.credit-card:hover {
+  transform: translateY(-5px);
+}
+
+.credit-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  border: 2px solid var(--card-border);
+}
+
+.credit-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.credit-info h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--primary-text);
+}
+
+.credit-info p {
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  margin: 0;
+}
+
+/* Recommendations & Similar Sections */
+.recommendations-section,
+.similar-section {
+  margin-top: 3rem;
+  padding: 0 2rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-text);
+  margin: 0;
+}
+
+.view-all-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.view-all-link:hover {
+  color: var(--primary-dark);
+  text-decoration: none;
+}
+
+.view-all-link .material-icons {
+  font-size: 1.2rem;
+  margin-left: 0.25rem;
+}
+
+/* Horizontal Scroll Container */
+.horizontal-scroll-container {
+  position: relative;
+  padding: 0 3rem;
+}
+
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+  gap: 1rem;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Movie Cards */
+.movie-card {
+  min-width: 200px;
+  cursor: pointer;
+  transition: transform 0.3s;
+  background: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+  box-shadow: var(--card-hover-shadow);
+}
+
+.movie-poster {
+  position: relative;
+  width: 200px;
+  height: 300px;
+  overflow: hidden;
+}
+
+.movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.movie-card:hover .play-overlay {
+  opacity: 1;
+}
+
+.play-overlay .material-icons {
+  font-size: 4rem;
+  color: var(--primary-color);
+}
+
+.movie-info {
+  padding: 1rem;
+}
+
+.movie-info h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--primary-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.movie-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  color: var(--rating-high);
+}
+
+.rating .material-icons {
+  font-size: 1rem;
+  margin-right: 0.25rem;
+}
+
+.year {
+  color: var(--secondary-text);
+}
+
+/* Scroll Buttons */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: var(--card-bg);
+  color: var(--primary-text);
+  border: 1px solid var(--card-border);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.scroll-btn:hover {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.scroll-btn-left {
+  left: 0;
+}
+
+.scroll-btn-right {
+  right: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .credits-section,
+  .recommendations-section,
+  .similar-section {
+    padding: 0 1rem;
+  }
+  
+  .horizontal-scroll-container {
+    padding: 0 2rem;
+  }
+  
+  .movie-card,
+  .movie-poster {
+    min-width: 150px;
+    width: 150px;
+  }
+  
+  .movie-poster {
+    height: 225px;
+  }
+  
+  .credit-card,
+  .credit-image {
+    min-width: 120px;
+    width: 120px;
+    height: 120px;
+  }
+}

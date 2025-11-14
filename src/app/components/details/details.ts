@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, ViewChild, QueryList, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { Location } from '@angular/common';
-
+// import { Component, ViewChild, ElementRef } from '@angular/core';
 @Component({
   selector: 'app-details',
   standalone: true,
@@ -32,7 +32,12 @@ export class Details implements OnInit, AfterViewInit {
     { left: false, right: false },
     { left: false, right: false }
   ];
+  movieCredits: any;
+  similarMovies: any[] = [];
 
+  @ViewChild('creditsScroll') creditsScroll!: ElementRef;
+  @ViewChild('recommendationsScroll') recommendationsScroll!: ElementRef;
+  @ViewChild('similarScroll') similarScroll!: ElementRef;
   private currentMovieId: number | null = null;
 
   constructor(
@@ -43,7 +48,7 @@ export class Details implements OnInit, AfterViewInit {
     private sanitizer: DomSanitizer,
     private location: Location
   ) {
-     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
   ngOnInit(): void {
@@ -62,6 +67,23 @@ export class Details implements OnInit, AfterViewInit {
     this.movieDisplay.language$.subscribe(lang => {
       this.loadMovie(id, lang);
       this.loadRecommendations(id, lang);
+    });
+
+
+    // Get Movie Credits
+    // في ngOnInit بعد تحميل الـ movie
+    this.apiService.getMovieCredits(+id).subscribe({
+      next: (data) => {
+        this.movieCredits = data;
+      },
+      error: (err) => console.error('Error loading credits:', err)
+    });
+
+    this.apiService.getSimilarMovies(+id).subscribe({
+      next: (data) => {
+        this.similarMovies = data.results;
+      },
+      error: (err) => console.error('Error loading similar movies:', err)
     });
   }
 
@@ -158,11 +180,11 @@ export class Details implements OnInit, AfterViewInit {
   goToMovie(id: number): void {
     // Update current movie ID
     this.currentMovieId = id;
-    
+
     // Navigate to new movie
     this.router.navigate(['/details', id]).then(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      
+
       // Reload movie and recommendations
       this.movieDisplay.language$.subscribe(lang => {
         this.loadMovie(id, lang);
@@ -171,12 +193,12 @@ export class Details implements OnInit, AfterViewInit {
     });
   }
 
-goBack(): void {
-  window.history.back();
-  setTimeout(() => {
-    this.router.navigate([this.router.url], { replaceUrl: true });
-  }, 50)
-}
+  goBack(): void {
+    window.history.back();
+    setTimeout(() => {
+      this.router.navigate([this.router.url], { replaceUrl: true });
+    }, 50)
+  }
 
 
 
@@ -184,4 +206,40 @@ goBack(): void {
     const url = `https://www.youtube.com/embed/${videoKey}`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
+  scrollLeft(section: string) {
+    const scrollElement = this.getScrollElement(section);
+    if (scrollElement) {
+      scrollElement.nativeElement.scrollBy({ left: -400, behavior: 'smooth' });
+    }
+  }
+
+  scrollRight(section: string) {
+    const scrollElement = this.getScrollElement(section);
+    if (scrollElement) {
+      scrollElement.nativeElement.scrollBy({ left: 400, behavior: 'smooth' });
+    }
+  }
+
+  private getScrollElement(section: string): ElementRef | null {
+    switch (section) {
+      case 'credits': return this.creditsScroll;
+      case 'recommendations': return this.recommendationsScroll;
+      case 'similar': return this.similarScroll;
+      default: return null;
+    }
+  }
+
+  navigateToMovie(movieId: number) {
+    this.router.navigate(['/movie', movieId]);
+    // أو لو بتستخدم id بس:
+    // this.router.navigate(['/details', movieId]);
+  }
+  navigateToGroupVideos(type: string) {
+  this.router.navigate(['/group-movies', type], { 
+    queryParams: { 
+      type: type, 
+      movieId: this.movie.id 
+    } 
+  });
+}
 }

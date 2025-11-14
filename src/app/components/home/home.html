@@ -1,69 +1,144 @@
-<!-- Featured Movie Banner -->
-<div class="featured-movie" [style.background-image]="'url(' + getMovieBackdrop(featuredMovie?.backdrop_path) + ')'">
-  <div class="overlay">
-    <h1>{{ featuredMovie?.title }}</h1>
-    <p>{{ featuredMovie?.overview }}</p>
-    <button (click)="navigateToDetails(featuredMovie?.id)">Watch Now</button>
+<!-- HTML Template -->
+<div class="home-container">
+  <!-- Featured Movie Banner with Autoplay Videos -->
+  <div class="featured-section">
+    <app-autoplay-videos></app-autoplay-videos>
+    <div class="featured-overlay">
+      <div class="featured-content">
+        <h1 class="featured-title">{{ featuredMovie?.title }}</h1>
+        <div class="featured-meta">
+          <span class="rating-badge">
+            <i class="bi bi-star-fill"></i>
+            {{ featuredMovie?.vote_average }}/10
+          </span>
+          <span class="year">{{ getFeaturedYear() }}</span>
+        </div>
+        <p class="featured-description">{{ featuredMovie?.overview }}</p>
+        <button class="btn-watch-trailer" (click)="navigateToDetails(featuredMovie?.id)">
+          <i class="bi bi-play-circle-fill"></i>
+          Watch Trailer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Movie Sections -->
+  <div class="sections-wrapper">
+    
+    <!-- Trending Now -->
+    <section class="movie-section">
+      <div class="section-header">
+        <h2>Trending Now</h2>
+      </div>
+      <div class="movies-scroll-container">
+        <div class="movies-row">
+          <div class="movie-card" 
+               *ngFor="let movie of popularMovies$ | async; let i = index"
+               [attr.data-index]="i"
+               (click)="navigateToDetails(movie.id)"
+               appLazyLoad>
+            <div class="movie-poster">
+              <img [attr.data-src]="getMoviePoster(movie.poster_path)" 
+                   [alt]="movie.title"
+                   class="lazy-image">
+              <div class="rating-overlay">
+                <span class="rating-badge" [style.background-color]="getRatingColor(movie.vote_average)">
+                  {{ movie.vote_average.toFixed(1) }}
+                </span>
+              </div>
+            </div>
+            <div class="movie-info">
+              <h3>{{ movie.title }}</h3>
+              <div class="movie-meta">
+                <span class="genre-tags">
+                  <span class="tag">{{ getFirstGenre(movie) }}</span>
+                </span>
+                <button class="btn-details">
+                  <i class="bi bi-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- New Releases -->
+    <section class="movie-section">
+      <div class="section-header">
+        <h2>New Releases</h2>
+      </div>
+      <div class="movies-scroll-container">
+        <div class="movies-row">
+          <div class="movie-card" 
+               *ngFor="let movie of nowPlayingMovies$ | async; let i = index"
+               [attr.data-index]="i"
+               (click)="navigateToDetails(movie.id)"
+               appLazyLoad>
+            <div class="movie-poster">
+              <img [attr.data-src]="getMoviePoster(movie.poster_path)" 
+                   [alt]="movie.title"
+                   class="lazy-image">
+              <div class="rating-overlay">
+                <span class="rating-badge" [style.background-color]="getRatingColor(movie.vote_average)">
+                  {{ movie.vote_average.toFixed(1) }}
+                </span>
+              </div>
+            </div>
+            <div class="movie-info">
+              <h3>{{ movie.title }}</h3>
+              <div class="movie-meta">
+                <span class="genre-tags">
+                  <span class="tag">{{ getFirstGenre(movie) }}</span>
+                </span>
+                <button class="btn-details">
+                  <i class="bi bi-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Genres -->
+    <section class="movie-section">
+      <div class="section-header">
+        <h2>Popular Genres</h2>
+      </div>
+      <div class="movies-scroll-container">
+        <div class="movies-row">
+          <div class="movie-card" 
+               *ngFor="let movie of topRatedMovies$ | async; let i = index"
+               [attr.data-index]="i"
+               (click)="navigateToDetails(movie.id)"
+               appLazyLoad>
+            <div class="movie-poster">
+              <img [attr.data-src]="getMoviePoster(movie.poster_path)" 
+                   [alt]="movie.title"
+                   class="lazy-image">
+              <div class="rating-overlay">
+                <span class="rating-badge" [style.background-color]="getRatingColor(movie.vote_average)">
+                  {{ movie.vote_average.toFixed(1) }}
+                </span>
+              </div>
+            </div>
+            <div class="movie-info">
+              <h3>{{ movie.title }}</h3>
+              <div class="movie-meta">
+                <span class="genre-tags">
+                  <span class="tag">{{ getFirstGenre(movie) }}</span>
+                </span>
+                <button class="btn-details">
+                  <i class="bi bi-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </div>
 </div>
 
-<!-- Movie Sections -->
-<section class="movie-section" *ngIf="popularMovies$ | async as popular">
-  <h2>Popular Movies <button (click)="navigateToGroup('popular')">View All</button></h2>
-  <div class="movies-row">
-    <div class="movie-card" *ngFor="let movie of popular" (click)="navigateToDetails(movie.id)">
-      <img [src]="getMoviePoster(movie.poster_path)" [alt]="movie.title">
-      <div class="movie-info">
-        <h3>{{ movie.title }}</h3>
-        <span class="rating" [style.background-color]="getRatingColor(movie.vote_average)">
-          {{ movie.vote_average }}
-        </span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="movie-section" *ngIf="nowPlayingMovies$ | async as nowPlaying">
-  <h2>Now Playing <button (click)="navigateToGroup('now-playing')">View All</button></h2>
-  <div class="movies-row">
-    <div class="movie-card" *ngFor="let movie of nowPlaying" (click)="navigateToDetails(movie.id)">
-      <img [src]="getMoviePoster(movie.poster_path)" [alt]="movie.title">
-      <div class="movie-info">
-        <h3>{{ movie.title }}</h3>
-        <span class="rating" [style.background-color]="getRatingColor(movie.vote_average)">
-          {{ movie.vote_average }}
-        </span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="movie-section" *ngIf="topRatedMovies$ | async as topRated">
-  <h2>Top Rated <button (click)="navigateToGroup('top-rated')">View All</button></h2>
-  <div class="movies-row">
-    <div class="movie-card" *ngFor="let movie of topRated" (click)="navigateToDetails(movie.id)">
-      <img [src]="getMoviePoster(movie.poster_path)" [alt]="movie.title">
-      <div class="movie-info">
-        <h3>{{ movie.title }}</h3>
-        <span class="rating" [style.background-color]="getRatingColor(movie.vote_average)">
-          {{ movie.vote_average }}
-        </span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="movie-section" *ngIf="upcomingMovies$ | async as upcoming">
-  <h2>Upcoming <button (click)="navigateToGroup('upcoming')">View All</button></h2>
-  <div class="movies-row">
-    <div class="movie-card" *ngFor="let movie of upcoming" (click)="navigateToDetails(movie.id)">
-      <img [src]="getMoviePoster(movie.poster_path)" [alt]="movie.title">
-      <div class="movie-info">
-        <h3>{{ movie.title }}</h3>
-        <span class="rating" [style.background-color]="getRatingColor(movie.vote_average)">
-          {{ movie.vote_average }}
-        </span>
-      </div>
-    </div>
-  </div>
-</section>
