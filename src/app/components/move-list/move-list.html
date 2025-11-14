@@ -51,7 +51,7 @@
     <div class="movie-card" *ngFor="let movie of movies$ | async">
       <!-- Poster Image -->
       <div class="movie-poster">
-        <img [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" [alt]="movie.title"
+        <img class="poster-img" [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path" [alt]="movie.title"
           (error)="$event.target.src='assets/no-poster.jpg'"
           style="width:300px; height:auto; border-radius: 10px; object-fit: cover;">
 

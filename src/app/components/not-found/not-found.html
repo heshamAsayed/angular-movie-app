@@ -1,32 +1,31 @@
-<div class="container-fluid not-found-container">
-  <div class="row align-items-center justify-content-center min-vh-100">
-    <div class="col-md-6 col-lg-5 text-center">
-      <div class="not-found-card">
-        <div class="error-code">404</div>
-        <h1 class="error-title">Page Not Found</h1>
-        <p class="error-description">
-          Sorry, the page you're looking for doesn't exist or has been moved.
-        </p>
+<div class="not-found-container">
+  <div class="not-found-content">
+    <div class="error-icon-wrapper">
+      <i class="bi bi-exclamation-triangle-fill error-icon"></i>
+    </div>
+    
+    <div class="error-code">404</div>
+    
+    <h1 class="error-title">Page Not Found</h1>
+    
+    <p class="error-description">
+      Sorry, the page you're looking for doesn't exist or has been moved.
+    </p>
 
-        <div class="error-icon">
-          <i class="bi bi-search"></i>
-        </div>
+    <div class="button-group">
+      <a href="/" class="btn btn-home">
+        <i class="bi bi-house-fill"></i>
+        <span>Go to Home</span>
+      </a>
+      <a href="/movies" class="btn btn-movies">
+        <i class="bi bi-film"></i>
+        <span>Browse Movies</span>
+      </a>
+    </div>
 
-        <div class="button-group mt-5">
-          <a href="/" class="btn btn-primary btn-lg">
-            <i class="bi bi-house"></i> Go to Home
-          </a>
-          <a href="/movies" class="btn btn-secondary btn-lg">
-            <i class="bi bi-film"></i> View Movies
-          </a>
-        </div>
-
-        <hr class="my-5" />
-
-        <p class="text-muted small mb-0">
-          <i class="bi bi-info-circle"></i> If you believe this is a mistake, please contact support.
-        </p>
-      </div>
+    <div class="help-text">
+      <i class="bi bi-info-circle"></i>
+      <span>If you believe this is a mistake, please contact support.</span>
     </div>
   </div>
 </div>

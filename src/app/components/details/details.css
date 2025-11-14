@@ -366,5 +366,251 @@
 	}
 
 }
+/* Recommendations Container */
+.recommendations-container {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
 
+.recommendations-row {
+  position: relative;
+  width: 100%;
+}
 
+.recommendations-scroll {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--card-bg);
+}
+
+.recommendations-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.recommendations-scroll::-webkit-scrollbar-track {
+  background: var(--card-bg);
+  border-radius: 4px;
+}
+
+.recommendations-scroll::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+.recommendations-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}
+
+/* Recommendation Card */
+.recommendation-card {
+  flex: 0 0 200px;
+  width: 200px;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.recommendation-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--card-hover-shadow);
+  border-color: var(--primary-color);
+}
+
+.rec-poster {
+  position: relative;
+  width: 100%;
+  /* height: 300px; */
+  overflow: hidden;
+}
+
+.rec-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.recommendation-card:hover .rec-poster img {
+  transform: scale(1.1);
+}
+
+.rec-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.recommendation-card:hover .rec-overlay {
+  opacity: 1;
+}
+
+.rec-overlay mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: var(--primary-color);
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+
+.recommendation-card:hover .rec-overlay mat-icon {
+  transform: scale(1);
+}
+
+.rec-info {
+  padding: 1rem;
+}
+
+.rec-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary-text);
+  margin: 0 0 0.5rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+  min-height: 2.8rem;
+}
+
+.rec-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.rec-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.rec-rating mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.rec-year {
+  color: var(--secondary-text);
+  font-size: 0.875rem;
+}
+
+/* Scroll Buttons */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--primary-text);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+  opacity: 0.9;
+}
+
+.scroll-btn:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.scroll-btn mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.scroll-left {
+  left: -24px;
+}
+
+.scroll-right {
+  right: -24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .recommendation-card {
+    flex: 0 0 160px;
+    width: 160px;
+  }
+
+  .rec-poster {
+    height: 240px;
+  }
+
+  .scroll-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .scroll-btn mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .scroll-left {
+    left: -20px;
+  }
+
+  .scroll-right {
+    right: -20px;
+  }
+
+  .recommendations-scroll {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .recommendation-card {
+    flex: 0 0 140px;
+    width: 140px;
+  }
+
+  .rec-poster {
+    height: 210px;
+  }
+
+  .rec-title {
+    font-size: 0.875rem;
+  }
+
+  .scroll-btn {
+    display: none;
+  }
+}

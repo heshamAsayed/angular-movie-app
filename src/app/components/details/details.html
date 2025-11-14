@@ -74,3 +74,83 @@
 <ng-template #loading>
     <div class="loading">Loading details...</div>
 </ng-template>
+
+<!-- Add this section after the trailer section and before closing </div></div></div> -->
+
+<ng-container *ngIf="recommendations && recommendations.length > 0">
+    <h3 class="section-title">Recommended Movies</h3>
+    
+    <div class="recommendations-container">
+        <!-- First Row -->
+        <div class="recommendations-row">
+            <button class="scroll-btn scroll-left" (click)="scrollRow('left', 0)" *ngIf="showScrollButtons[0]?.left">
+                <mat-icon>chevron_left</mat-icon>
+            </button>
+            
+            <div class="recommendations-scroll" #scrollContainer0>
+                <div class="recommendation-card" *ngFor="let rec of firstRowRecommendations" (click)="goToMovie(rec.id)">
+                    <div class="rec-poster">
+                        <img [src]="rec.poster_path ? 'https://image.tmdb.org/t/p/w300' + rec.poster_path : 'assets/no-poster.jpg'" 
+                             [alt]="rec.title"
+                             (error)="$event.target.src='assets/no-poster.jpg'">
+                        <div class="rec-overlay">
+                            <mat-icon>play_circle_outline</mat-icon>
+                        </div>
+                    </div>
+                    <div class="rec-info">
+                        <h4 class="rec-title">{{ rec.title }}</h4>
+                        <div class="rec-meta">
+                            <span class="rec-rating">
+                                <mat-icon>star</mat-icon>
+                                {{ rec.vote_average | number: '1.1-1' }}
+                            </span>
+                            <span class="rec-year" *ngIf="rec.release_date">
+                                {{ rec.release_date | date:'yyyy' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="scroll-btn scroll-right" (click)="scrollRow('right', 0)" *ngIf="showScrollButtons[0]?.right">
+                <mat-icon>chevron_right</mat-icon>
+            </button>
+        </div>
+
+        <!-- Second Row -->
+        <div class="recommendations-row">
+            <button class="scroll-btn scroll-left" (click)="scrollRow('left', 1)" *ngIf="showScrollButtons[1]?.left">
+                <mat-icon>chevron_left</mat-icon>
+            </button>
+            
+            <div class="recommendations-scroll" #scrollContainer1>
+                <div class="recommendation-card" *ngFor="let rec of secondRowRecommendations" (click)="goToMovie(rec.id)">
+                    <div class="rec-poster">
+                        <img [src]="rec.poster_path ? 'https://image.tmdb.org/t/p/w300' + rec.poster_path : 'assets/no-poster.jpg'" 
+                             [alt]="rec.title"
+                             (error)="$event.target.src='assets/no-poster.jpg'">
+                        <div class="rec-overlay">
+                            <mat-icon>play_circle_outline</mat-icon>
+                        </div>
+                    </div>
+                    <div class="rec-info">
+                        <h4 class="rec-title">{{ rec.title }}</h4>
+                        <div class="rec-meta">
+                            <span class="rec-rating">
+                                <mat-icon>star</mat-icon>
+                                {{ rec.vote_average | number: '1.1-1' }}
+                            </span>
+                            <span class="rec-year" *ngIf="rec.release_date">
+                                {{ rec.release_date | date:'yyyy' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="scroll-btn scroll-right" (click)="scrollRow('right', 1)" *ngIf="showScrollButtons[1]?.right">
+                <mat-icon>chevron_right</mat-icon>
+            </button>
+        </div>
+    </div>
+</ng-container>
