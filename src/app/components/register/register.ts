@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -9,13 +9,16 @@ import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from '@ang
 import { getDatabase, ref, set } from 'firebase/database';
 import { getApp } from 'firebase/app';
 
+declare const lucide: any;
+
 @Component({
   selector: 'app-register-page',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.html',
   styleUrls: ['./register.css'],
 })
-export class RegisterPage {
+
+export class RegisterPage implements AfterViewInit {
   form!: FormGroup;
   loading = false;
   error = '';
@@ -35,6 +38,8 @@ export class RegisterPage {
 
   selectedProfileImage: File | undefined = undefined;
   profileImagePreview: string | undefined = undefined;
+  showPassword = false;
+  showConfirm = false;
 
   // عند اختيار الصورة
   onProfileImageSelected(event: any) {
@@ -60,6 +65,14 @@ export class RegisterPage {
     reader.readAsDataURL(file);
   }
 
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirm() {
+    this.showConfirm = !this.showConfirm;
+  }
+
   // أثناء التسجيل، رفع الصورة وأخذ الـ download URL
 async uploadProfileImage(): Promise<string | undefined> {
   if (!this.selectedProfileImage) return undefined;
@@ -75,6 +88,16 @@ async uploadProfileImage(): Promise<string | undefined> {
     throw error;
   }
 }
+
+  ngAfterViewInit(): void {
+    try {
+      if (typeof lucide !== 'undefined' && lucide && lucide.createIcons) {
+        lucide.createIcons();
+      }
+    } catch (e) {
+      // lucide not available
+    }
+  }
 
 // register.component.ts - Fixed submit method
 

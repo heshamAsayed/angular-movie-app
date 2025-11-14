@@ -110,10 +110,10 @@
             <mat-icon>{{ isInWatchlist(movie.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
           </button>
 
-          <button mat-stroked-button color="primary" (click)="viewDetails(movie)">
-            <mat-icon>info</mat-icon>
-            Details
-          </button>
+            <button mat-stroked-button color="primary" class="btn-details" (click)="viewDetails(movie)" aria-label="View details for {{ movie.title }}">
+              <mat-icon aria-hidden="true">info</mat-icon>
+              <span class="btn-text">Details</span>
+            </button>
         </div>
       </div>
     </div>

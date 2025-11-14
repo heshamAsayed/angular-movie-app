@@ -1,347 +1,112 @@
 <div class="register-page" id="mainContainer">
-    <div class="register-card">
-        <!-- Header -->
-        <div class="register-header">
-            <div class="header-icon">
-                <i data-lucide="film"></i>
+  <div class="register-card">
+    <header class="register-header">
+      <div class="header-icon" aria-hidden="true"><i data-lucide="film"></i></div>
+      <h1 class="header-title">Create Account</h1>
+      <p class="header-subtitle">Join Movie App and discover amazing films</p>
+    </header>
+
+    <section class="register-body">
+      <div *ngIf="!error && false" class="alert custom-alert alert-success" role="alert">
+        <i data-lucide="check-circle"></i>
+        <span>Account created successfully!</span>
+      </div>
+
+      <div *ngIf="error" class="alert custom-alert alert-danger" role="alert">
+        <i data-lucide="alert-circle"></i>
+        <span>{{ error }}</span>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="register-form" novalidate>
+        <div class="form-grid">
+          <label class="form-label">
+            Full Name <span class="required">*</span>
+            <input type="text" class="form-input" formControlName="name" placeholder="Enter your full name" />
+          </label>
+
+          <label class="form-label">
+            Email Address <span class="required">*</span>
+            <input type="email" class="form-input" formControlName="email" placeholder="you@email.com" />
+          </label>
+
+          <label class="form-label">
+            Password <span class="required">*</span>
+            <div class="password-wrapper">
+              <input [type]="showPassword ? 'text' : 'password'" class="form-input" formControlName="password"
+                placeholder="Create password" />
+              <button type="button" class="password-toggle" (click)="togglePassword()" [attr.aria-pressed]="showPassword">
+                <i data-lucide="eye"></i>
+              </button>
             </div>
-            <h1 class="header-title">Create Account</h1>
-            <p class="header-subtitle">Join Movie App and discover amazing films</p>
-        </div>
+          </label>
 
-        <!-- Form Content -->
-        <div class="register-body">
-            <!-- Success Message -->
-            <div class="alert custom-alert alert-success d-none" id="successMessage" role="alert">
-                <i data-lucide="check-circle"></i>
-                <span id="successText">Account created successfully!</span>
+          <label class="form-label">
+            Confirm Password <span class="required">*</span>
+            <div class="password-wrapper">
+              <input [type]="showConfirm ? 'text' : 'password'" class="form-input" formControlName="confirm" placeholder="Re-enter password" />
+              <button type="button" class="password-toggle" (click)="toggleConfirm()" [attr.aria-pressed]="showConfirm">
+                <i data-lucide="eye"></i>
+              </button>
+            </div>
+          </label>
+
+          <label class="form-label">
+            Phone Number <span class="optional">(optional)</span>
+            <input type="tel" class="form-input" formControlName="phone" placeholder="+20 100 123 4567" />
+          </label>
+
+          <label class="form-label">
+            Country <span class="optional">(optional)</span>
+            <input type="text" class="form-input" formControlName="country" placeholder="Egypt" />
+          </label>
+
+          <label class="form-label">
+            City <span class="optional">(optional)</span>
+            <input type="text" class="form-input" formControlName="city" placeholder="Minya" />
+          </label>
+
+          <div class="upload-block">
+            <label class="form-label">Profile Picture <span class="optional">(optional)</span></label>
+            <div class="upload-area" (click)="fileInput.click()" role="button" tabindex="0">
+              <i data-lucide="upload" class="upload-icon"></i>
+              <div class="upload-text">Click to upload image</div>
+              <div class="upload-hint">JPG, PNG, GIF - max 5 MB</div>
+              <input #fileInput type="file" (change)="onProfileImageSelected($event)" accept="image/*" class="d-none" />
             </div>
 
-            <!-- Error Message -->
-            <div class="alert custom-alert alert-danger d-none" id="errorMessage" role="alert">
-                <i data-lucide="alert-circle"></i>
-                <span id="errorText">Please check the form and try again.</span>
-            </div>
-
-            <!-- Google Sign In Section - ضعها بعد زر Submit وقبل Login Link -->
-
-            <button type="button" class="google-btn" id="googleSignInBtn" (click)="loginWithGoogle()">
-                <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
-                    <path fill="#4285F4"
-                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                    <path fill="#34A853"
-                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                    <path fill="#FBBC05"
-                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                    <path fill="#EA4335"
-                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                </svg>
-                <span>Sign up by Google</span>
-            </button>
-            <button type="button" class="facebook-btn" id="facebookSignInBtn" (click)="loginWithFacebook()">
-                <svg class="facebook-icon" viewBox="0 0 24 24" width="20" height="20">
-                    <path fill="#1877F2"
-                        d="M24 12c0-6.63-5.37-12-12-12S0 5.37 0 12c0 6 4.39 10.95 10.13 11.86v-8.38h-3.05V12h3.05V9.35c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.23 2.68.23v2.95h-1.51c-1.49 0-1.95.92-1.95 1.87V12h3.32l-.53 3.48h-2.79v8.38C19.61 22.95 24 18 24 12z" />
-                </svg>
-                <span>Sign up by Facebook</span>
-            </button>
-
-
-            <!-- <div class="divider-section">
-    <div class="divider-line"></div>
-    <span class="divider-text"></span>
-    <div class="divider-line"></div>
-</div> -->
-            <form [formGroup]="form" method="post" (ngSubmit)="submit()" class="register-form" novalidate>
-                <!-- Name Field -->
-                <div class="form-group">
-                    <label class="form-label">
-                        Full Name <span class="required">*</span>
-                    </label>
-                    <input type="text" class="form-input" formControlName="name" placeholder="Enter your full name"
-                        required minlength="2">
-                </div>
-
-                <!-- Email Field -->
-                <div class="form-group">
-                    <label class="form-label">
-                        Email Address <span class="required">*</span>
-                    </label>
-                    <input type="email" class="form-input" formControlName="email" placeholder="your@email.com"
-                        required>
-                </div>
-
-                <!-- Password Field -->
-                <div class="form-group">
-                    <label class="form-label">
-                        Password <span class="required">*</span>
-                    </label>
-                    <div class="password-wrapper">
-                        <input type="password" class="form-input" formControlName="password"
-                            placeholder="Create password" required minlength="6">
-                        <button type="button" class="password-toggle">
-                            <i data-lucide="eye"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Confirm Password Field -->
-                <div class="form-group">
-                    <label class="form-label">
-                        Confirm Password <span class="required">*</span>
-                    </label>
-                    <div class="password-wrapper">
-                        <input type="password" class="form-input" formControlName="confirm"
-                            placeholder="Re-enter password" required>
-                        <button type="button" class="password-toggle">
-                            <i data-lucide="eye"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Phone Field -->
-                <div class="form-group">
-                    <label class="form-label">
-                        Phone Number <span class="optional">(optional)</span>
-                    </label>
-                    <input type="tel" class="form-input" formControlName="phone" placeholder="+20 100 123 4567">
-                </div>
-
-                <!-- Country & City -->
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label">
-                                Country <span class="optional">(optional)</span>
-                            </label>
-                            <input type="text" class="form-input" formControlName="country" placeholder="Egypt">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label">
-                                City <span class="optional">(optional)</span>
-                            </label>
-                            <input type="text" class="form-input" formControlName="city" placeholder="Minya">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Profile Image Upload -->
-                <div class="form-group">
-                    <label class="form-label">
-                        Profile Picture <span class="optional">(optional)</span>
-                    </label>
-                    <div id="uploadArea" class="upload-area" (click)="profileInput.click()">
-                        <i data-lucide="upload" class="upload-icon"></i>
-                        <span class="upload-text">Click to upload image</span>
-                        <span class="upload-hint">JPG, PNG, GIF - max 5 MB</span>
-
-                        <input type="file" #profileInput (change)="onProfileImageSelected($event)" accept="image/*"
-                            class="d-none">
-                    </div>
-
-                    <div *ngIf="profileImagePreview" class="image-preview">
-                        <img [src]="profileImagePreview" alt="Profile preview" class="preview-img">
-                        <button type="button" class="remove-image-btn"
-                            (click)="selectedProfileImage = undefined; profileImagePreview = undefined;">
-                            <i data-lucide="x"></i> Remove
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Terms Checkbox -->
-                <div class="form-group">
-                    <div class="custom-checkbox">
-                        <input type="checkbox" formControlName="agreedToTerms" id="agreedToTerms" required>
-                        <label for="agreedToTerms">
-                            I agree to the <a href="#" class="link">Terms & Conditions</a> and <a href="#"
-                                class="link">Privacy Policy</a>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="submit-btn" [disabled]="loading">
-                    <i data-lucide="check-circle" class="btn-icon"></i>
-                    <span *ngIf="!loading">Create Account</span>
-                    <span *ngIf="loading">Creating...</span>
+            <div *ngIf="profileImagePreview" class="image-preview">
+              <img [src]="profileImagePreview" alt="Profile preview" class="preview-img" />
+              <div class="preview-actions">
+                <button type="button" class="remove-image-btn" (click)="selectedProfileImage = undefined; profileImagePreview = undefined;">
+                  <i data-lucide="x"></i> Remove
                 </button>
-
-                <!-- Error message -->
-                <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
-            </form>
-
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Footer Security Badge -->
-        <div class="register-footer">
-            <i data-lucide="shield" class="security-icon"></i>
-            <span class="security-text">Your data is fully protected</span>
+        <div class="form-actions">
+          <label class="custom-checkbox">
+            <input type="checkbox" formControlName="agreedToTerms" />
+            <span>I agree to the <a href="#" class="link">Terms & Conditions</a> and <a href="#" class="link">Privacy Policy</a></span>
+          </label>
+
+          <button type="submit" class="submit-btn" [disabled]="loading">
+            <i data-lucide="check-circle" class="btn-icon"></i>
+            <span *ngIf="!loading">Create Account</span>
+            <span *ngIf="loading">Creating...</span>
+          </button>
         </div>
-    </div>
+      </form>
+
+      <div class="login-section">
+        <p class="login-text">Already have an account? <a [routerLink]="['/login']" class="link link-bold">Login</a></p>
+      </div>
+    </section>
+
+    <footer class="register-footer">
+      <i data-lucide="shield" class="security-icon"></i>
+      <span class="security-text">Your data is fully protected</span>
+    </footer>
+  </div>
 </div>
-
-<script>
-    lucide.createIcons();
-
-    // Password visibility toggles
-    const togglePassword = document.getElementById('togglePassword');
-    const password = document.getElementById('password');
-    const passwordIcon = document.getElementById('passwordIcon');
-
-    togglePassword.addEventListener('click', () => {
-        const type = password.type === 'password' ? 'text' : 'password';
-        password.type = type;
-        passwordIcon.setAttribute('data-lucide', type === 'password' ? 'eye' : 'eye-off');
-        lucide.createIcons();
-    });
-
-    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-    const confirmPassword = document.getElementById('confirmPassword');
-    const confirmPasswordIcon = document.getElementById('confirmPasswordIcon');
-
-    toggleConfirmPassword.addEventListener('click', () => {
-        const type = confirmPassword.type === 'password' ? 'text' : 'password';
-        confirmPassword.type = type;
-        confirmPasswordIcon.setAttribute('data-lucide', type === 'password' ? 'eye' : 'eye-off');
-        lucide.createIcons();
-    });
-
-    // Password strength checker
-    password.addEventListener('input', () => {
-        const value = password.value;
-        const strengthDiv = document.getElementById('passwordStrength');
-        const strengthText = document.getElementById('strengthText');
-
-        if (value.length === 0) {
-            strengthDiv.classList.add('d-none');
-            return;
-        }
-
-        strengthDiv.classList.remove('d-none');
-
-        let strength = 'weak';
-        if (value.length >= 8 && /[A-Z]/.test(value) && /[0-9]/.test(value) && /[^A-Za-z0-9]/.test(value)) {
-            strength = 'strong';
-        } else if (value.length >= 6 && (/[A-Z]/.test(value) || /[0-9]/.test(value))) {
-            strength = 'medium';
-        }
-
-        strengthText.textContent = strength.charAt(0).toUpperCase() + strength.slice(1);
-        strengthText.className = 'strength-value strength-' + strength;
-    });
-
-    // Profile image upload
-    const uploadArea = document.getElementById('uploadArea');
-    const profileImageInput = document.getElementById('profileImage');
-    const imagePreview = document.getElementById('imagePreview');
-    const previewImg = document.getElementById('previewImg');
-    const removeImageBtn = document.getElementById('removeImage');
-
-    uploadArea.addEventListener('click', () => {
-        profileImageInput.click();
-    });
-
-    profileImageInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file && file.size <= 5 * 1024 * 1024) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewImg.src = e.target.result;
-                uploadArea.classList.add('d-none');
-                imagePreview.classList.remove('d-none');
-                lucide.createIcons();
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    removeImageBtn.addEventListener('click', () => {
-        profileImageInput.value = '';
-        previewImg.src = '';
-        uploadArea.classList.remove('d-none');
-        imagePreview.classList.add('d-none');
-    });
-
-    // Form submission
-    const form = document.getElementById('registrationForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const btnText = document.getElementById('btnText');
-    const successMessage = document.getElementById('successMessage');
-    const errorMessage = document.getElementById('errorMessage');
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        successMessage.classList.add('d-none');
-        errorMessage.classList.add('d-none');
-
-        if (!form.checkValidity()) {
-            form.classList.add('was-validated');
-            errorMessage.classList.remove('d-none');
-            document.getElementById('errorText').textContent = 'Please fill in all required fields correctly.';
-            return;
-        }
-
-        if (password.value !== confirmPassword.value) {
-            errorMessage.classList.remove('d-none');
-            document.getElementById('errorText').textContent = 'Passwords do not match.';
-            return;
-        }
-
-        submitBtn.disabled = true;
-        btnText.innerHTML = '<div class="spinner-border"></div> Creating account...';
-
-        setTimeout(() => {
-            successMessage.classList.remove('d-none');
-            document.getElementById('successText').textContent = 'Account created successfully! Redirecting...';
-            submitBtn.disabled = false;
-            btnText.textContent = 'Create Account';
-            lucide.createIcons();
-
-            setTimeout(() => {
-                form.reset();
-                form.classList.remove('was-validated');
-                successMessage.classList.add('d-none');
-            }, 2000);
-        }, 2000);
-    });
-
-    // Google Sign In Handler
-    document.getElementById('googleSignInBtn').addEventListener('click', async () => {
-        try {
-            const btn = document.getElementById('googleSignInBtn');
-            const originalContent = btn.innerHTML;
-
-            // Show loading state
-            btn.disabled = true;
-            btn.innerHTML = '<div class="spinner-border spinner-border-sm"></div> Connecting...';
-
-            // Call your Angular service method here
-            // For example: authService.loginWithGoogle()
-
-            // Simulated API call - Replace with actual implementation
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // Success handling
-            const successMessage = document.getElementById('successMessage');
-            successMessage.classList.remove('d-none');
-            document.getElementById('successText').textContent = 'تم تسجيل الدخول بنجاح عبر Google!';
-
-            setTimeout(() => {
-                // Redirect to home page
-                window.location.href = 'home.html';
-            }, 1500);
-
-        } catch (error) {
-            // Error handling
-            const errorMessage = document.getElementById('errorMessage');
-            errorMessage.classList.remove('d-none');
-            document.getElementById('errorText').textContent = 'حدث خطأ أثناء تسجيل الدخول عبر Google';
-
-            btn.disabled = false;
-            btn.innerHTML = originalContent;
-        }
-    });
-</script>

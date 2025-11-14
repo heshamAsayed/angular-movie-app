@@ -174,6 +174,7 @@ $dark-theme: mat.define-theme((
   --primary-text: #000000;
   --secondary-text: #424242;
   --muted-text: #757575;
+  --placeholder-color: #7a7a7a;
   
   // Movie Card Colors - Bold & Clear
   --rating-badge-bg: #1565c0;
@@ -218,6 +219,7 @@ $dark-theme: mat.define-theme((
   --primary-text: #ffffff;
   --secondary-text: #e0e0e0;
   --muted-text: #9e9e9e;
+  --placeholder-color: #9e9e9e;
   
   // Movie Card Colors (Dark Mode) - Vibrant & Clear
   --rating-badge-bg: #2196f3;

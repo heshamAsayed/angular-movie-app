@@ -460,17 +460,49 @@ body {
 }
 
 .btn-details {
-    background: var(--primary-color);
-    color: white;
-    border: 1px solid var(--primary-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1 1 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+    color: var(--primary-contrast, #fff);
+    border: 1px solid transparent;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: none;
+    box-shadow: 0 6px 18px rgba(16,24,40,0.06);
 }
 
-.btn-details:hover {
-    background: var(--primary-dark);
-    border-color: var(--primary-dark);
-    box-shadow: 0 4px 12px rgba(217, 42, 0, 0.4);
-    color: white;
-    text-decoration: none;
+.btn-details mat-icon, .btn-details i {
+    font-size: 1.1rem;
+    opacity: 0.95;
+}
+
+.btn-details:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(16,24,40,0.12);
+    filter: brightness(1.02);
+}
+
+.btn-details:focus-visible {
+    outline: 3px solid rgba(21, 122, 252, 0.15);
+    outline-offset: 2px;
+}
+
+/* Ensure the internal text and icon align and don't wrap awkwardly */
+.btn-details .btn-text {
+    display: inline-block;
+    line-height: 1;
+}
+
+/* Dark-mode aware: use variables so color can be tuned globally */
+body.dark-mode .btn-details {
+    background: linear-gradient(180deg, var(--primary, #0b1220), var(--primary-600, #141b25));
+    color: var(--primary-contrast, #fff);
+    box-shadow: 0 8px 24px rgba(2,6,23,0.45);
 }
 
 /* ========== التصفح ========== */
