@@ -300,7 +300,7 @@ The API service `src/app/services/server/api.ts` contains helper methods that re
 
 ### Supervisor
 
-- Hassan Eldash — https://github.com/hassaneldash
+**[Hassan Eldash](https://github.com/hassaneldash)**
 
 ---
 
@@ -336,4 +336,5 @@ Other major integrations:
   - Add a quick `CONTRIBUTING.md` with developer setup instructions
 
 ---
+
 
