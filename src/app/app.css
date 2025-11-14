@@ -48,7 +48,7 @@
   .logo-text {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--navbar-text);
     letter-spacing: 0.5px;
   }
 
@@ -260,9 +260,10 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   flex-direction: row;
 }
+
 
 .horizontal-links li {
   margin: 0;
@@ -691,4 +692,151 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Navbar Base Styles */
+.navbar {
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
+  height: 64px;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Logo Section */
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: 500;
+}
+
+/* Right Section */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.watchlist-wrapper {
+  position: relative;
+}
+
+.watchlist-label {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 5px;
+  border-radius: 50%;
+}
+
+/* User menu */
+.user-menu .user-info-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.user-avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* Responsive Styles */
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .footer-links {
+    display: none; /* Hide links, maybe use hamburger menu */
+  }
+
+  .logo-text {
+    display: none; /* Only show icon */
+  }
+
+  .nav-actions {
+    gap: 5px;
+  }
+
+  .watchlist-label {
+    font-size: 0.6rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .logo-section {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .nav-actions {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .watchlist-wrapper {
+    order: 2;
+  }
+
+  .theme-toggle, .lang-btn, .login-btn, .register-btn, .favorites-btn {
+    padding: 0 5px;
+    min-width: 36px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .logo-icon {
+    font-size: 1.2rem;
+  }
+
+  .theme-toggle mat-icon, .favorites-btn mat-icon {
+    font-size: 20px;
+  }
+
+  .user-info-header .user-details p {
+    font-size: 0.8rem;
+  }
 }

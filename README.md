@@ -200,13 +200,14 @@ Place screenshot images inside `docs/screenshots/` (create the folder if it does
 
 Example markdown to include images (already used below):
 
-![Homepage — Featured movies](docs/screenshots/homepage-featured.png)
+![Homepage — Featured movies](public/screenshots/homepage-featured.png)
 *Homepage — Featured movies.*
 
-![Movie Details](docs/screenshots/movie-details.png)
+![Movie Details](public/screenshots/movie-details.png)
+![Movie Details](public/screenshots/movie-details2.png)
 *Movie Details page with cast & recommended movies.*
 
-![Login](docs/screenshots/login.png)
+![Login](public/screenshots/login.png)
 *Login / Sign-in screen.*
 
 > Note: The repository contains screenshots you can copy into the `docs/screenshots/` folder. If you prefer a different location, update the paths accordingly.
