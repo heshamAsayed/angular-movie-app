@@ -18,7 +18,6 @@
 - [Data Models](#data-models)
 - [Developers & Supervisor](#developers--supervisor)
 - [Dependency Tree (Optional)](#dependency-tree-optional)
-- [License & Notes](#license--notes)
 
 ---
 
@@ -336,17 +335,3 @@ Other major integrations:
   - Add a quick `CONTRIBUTING.md` with developer setup instructions
 
 ---
-
-## License & Attribution
-
-Include any license information here (not set by default). Make sure to check third-party assets (images, videos) licensing before publishing.
-
----
-
-If you want, I can now:
-
-- Commit this `README.md` to the repository
-- Create the `docs/screenshots/` folder and place placeholder files (or import provided screenshots)
-- Add `.env.example` for secrets
-
-Tell me which of the above you'd like me to do next.
