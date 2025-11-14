@@ -1,94 +1,210 @@
-/* Login component uses global theme variables from custom-theme.scss.
-   This stylesheet mirrors the register page styles so login visuals match exactly. */
-
-.login-page { min-height: 100vh; display:flex; align-items:center; justify-content:center; padding:24px 16px; }
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background: transparent;
+}
 
 .login-card {
   width: 100%;
-  max-width: 600px;
+  max-width: 640px;
   background: var(--card-bg);
-  border-radius: 20px;
-  box-shadow: var(--card-shadow, 0 20px 60px rgba(0,0,0,0.3));
+  border-radius: 18px;
+  box-shadow: var(--card-shadow, 0 18px 60px rgba(0,0,0,0.45));
   overflow: hidden;
   border: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
 }
 
 .login-header {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   color: var(--primary-text);
   text-align: center;
-  padding: 32px 28px;
+  padding: 36px 28px;
 }
 
-.login-header .header-icon { width:64px; height:64px; background: rgba(255,255,255,0.12); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px }
-.login-header .header-title { font-size:28px; font-weight:800; margin:0 0 6px }
-.login-header .header-subtitle { margin:0; opacity:0.95 }
+.header-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
 
-.login-body { padding: 28px 24px; }
+.header-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
 
-.form-group { margin-bottom: 20px; }
-.form-label { display:block; font-weight:600; color:var(--primary-text); margin-bottom:8px; font-size:14px }
+.header-subtitle {
+  margin: 0;
+  opacity: 0.95;
+  font-weight: 600;
+}
+
+.login-body {
+  padding: 28px 24px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-label {
+  display: block;
+  font-weight: 700;
+  color: var(--primary-text);
+  margin-bottom: 8px;
+  font-size: 13px;
+}
 
 .form-input {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid var(--card-border);
   border-radius: 12px;
+  border: 1px solid var(--card-border);
   background: var(--card-bg);
   color: var(--primary-text);
   font-size: 15px;
-  transition: all .22s ease;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
-.form-input::placeholder { color: var(--placeholder-color, var(--muted-text, #7a7a7a)); }
-.form-input:focus { outline:none; border-color: var(--primary-color); box-shadow: 0 8px 20px rgba(21,101,192,0.08); }
+.form-input::placeholder {
+  color: var(--placeholder-color, var(--muted-text, #7a7a7a));
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 8px 20px rgba(21,101,192,0.08);
+}
 
 .submit-btn {
-  width:100%;
-  padding:14px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   color: var(--primary-text);
-  border:none;
-  border-radius:12px;
-  font-size:16px;
-  font-weight:800;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  transition: all .18s ease;
+  border: none;
+  font-weight: 800;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submit-btn:hover:not(:disabled),
+.submit-btn:focus:not(:disabled) {
+  transform: translateY(-2px);
   box-shadow: var(--card-hover-shadow);
 }
 
-.submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(21,101,192,0.32); }
-
-.divider-section { display:flex; align-items:center; margin:22px 0; gap:12px }
-.divider-line { flex:1; height:1px; background: var(--card-border) }
-.divider-text { color: var(--muted-text); font-size:14px; font-weight:500 }
-
-.google-btn { width:100%; padding:12px 16px; background: var(--card-bg); border:1px solid var(--card-border); border-radius:12px; font-size:15px; font-weight:700; color:var(--primary-text); display:flex; align-items:center; justify-content:center; gap:12px; transition:all .18s ease; }
-.google-btn:hover { background: var(--card-hover-bg); border-color: var(--primary-color); box-shadow: 0 6px 18px rgba(66,133,244,0.12); transform: translateY(-2px); }
-
-.login-section { margin-top:20px; padding-top:20px; border-top:1px solid var(--card-border); text-align:center }
-.login-text { color: var(--secondary-text); margin:0 }
-.link { color: var(--primary-color); font-weight:700 }
-
-/* Responsive */
-@media (max-width:768px) {
-  .login-card { max-width: 520px }
-  .login-header { padding: 24px 18px }
-  .login-body { padding: 20px 16px }
+.divider-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0;
 }
 
-/* Dark mode respects global variables in custom-theme.scss */
-/* No duplicated :root variables here — use global theme only. */
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--card-border);
+}
 
-/* Facebook button variant to match register visuals */
-.facebook-btn { display: inline-flex; align-items: center; gap: 8px; width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--primary-color, #2f80ed); background: var(--primary-color, #2f80ed); color: var(--primary-text, #fff); font-weight: 700; justify-content: center; transition: transform 0.12s ease, box-shadow 0.12s ease; }
-.facebook-btn:hover, .facebook-btn:focus { transform: translateY(-1px); box-shadow: 0px 6px 18px rgba(47, 128, 237, 0.12); }
-.facebook-icon { width: 18px; height: 18px; display: inline-block; }
+.divider-text {
+  color: var(--muted-text);
+  font-size: 14px;
+  font-weight: 600;
+}
 
-/* Generic error text used by form validation */
-.error { color: var(--warn-color, #ea5455); font-size: 0.9rem; margin-top: 8px; }
+.google-btn,
+.facebook-btn {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--primary-text);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+}
 
+.google-btn:hover,
+.google-btn:focus {
+  background: var(--card-hover-bg);
+  border-color: var(--primary-color);
+  box-shadow: 0 6px 18px rgba(66,133,244,0.12);
+  transform: translateY(-2px);
+}
 
+.facebook-btn:hover,
+.facebook-btn:focus {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--primary-text);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(21,101,192,0.14);
+}
+
+.google-icon,
+.facebook-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+}
+
+.login-section {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--card-border);
+  text-align: center;
+}
+
+.login-text {
+  color: var(--secondary-text);
+  margin: 0;
+}
+
+.link {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.error {
+  color: var(--warn-color, #ea5455);
+  font-size: 0.95rem;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .login-card {
+    max-width: 520px;
+  }
+
+  .login-header {
+    padding: 24px 18px;
+  }
+
+  .login-body {
+    padding: 20px 16px;
+  }
+}

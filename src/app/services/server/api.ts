@@ -21,7 +21,7 @@ export class API {
   private apiKey = '92e1011b82e7b4f98f14eea8d946d703';
   private baseUrl = 'https://api.themoviedb.org/3';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // ==============================
   // Get popular movies with language support
@@ -108,4 +108,44 @@ export class API {
       .set('language', language);
     return this.http.get(`${this.baseUrl}/movie/${id}/videos`, { params });
   }
+
+  //Top Rated Movies
+  getTopRatedMovies(page: number = 1, language: string = 'en'): Observable<any> {
+    const params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('page', page.toString())
+      .set('language', language);
+    return this.http.get(`${this.baseUrl}/movie/top_rated`, { params });
+  }
+
+  //Upcoming Movies
+  getUpcomingMovies(page: number = 1, language: string = 'en'): Observable<any> {
+    const params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('page', page.toString())
+      .set('language', language);
+    return this.http.get(`${this.baseUrl}/movie/upcoming`, { params });
+  }
+
+
+
+
+  //  in Details for moive 
+  //Movie Credits (Cast & Crew)
+  getMovieCredits(id: number, language: string = 'en'): Observable<any> {
+    const params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('language', language);
+    return this.http.get(`${this.baseUrl}/movie/${id}/credits`, { params });
+  }
+
+
+  //Similar Movies
+  getSimilarMovies(id: number, language: string = 'en'): Observable<any> {
+    const params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('language', language);
+    return this.http.get(`${this.baseUrl}/movie/${id}/similar`, { params });
+  }
+
 }

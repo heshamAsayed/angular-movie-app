@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { Home } from './components/home/home';
 
 export const routes: Routes = [
   {
@@ -11,6 +12,11 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () =>
       import('./components/register/register').then((m) => m.RegisterPage),
+  },{
+    path: 'home',
+    loadComponent: () =>
+      import('./components/home/home').then((m) => m.Home),
+    title: 'Home - Movie Hub'
   },
   {
     path: 'movies',
@@ -21,6 +27,13 @@ export const routes: Routes = [
     path: 'details/:id',
     loadComponent: () =>
       import('./components/details/details').then((m) => m.Details),
+	  title: 'Movie Details - Movie Hub'
+  },
+  {
+    path: 'group-movies/:category',
+    loadComponent: () =>
+      import('./components/group-movies/group-movies').then((m) => m.GroupMovies),
+    title: 'Movies - Movie Hub'
   },
   {
     path: 'watchlist',
@@ -50,6 +63,6 @@ export const routes: Routes = [
         (m) => m.NotFoundComponent
       ),
   },
-  { path: '', redirectTo: 'movies', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'error' },
 ];

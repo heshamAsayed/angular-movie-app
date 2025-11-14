@@ -1,0 +1,12 @@
+<section class="group-section" *ngIf="movies$ | async as movies">
+  <h2>{{ category | titlecase }} Movies</h2>
+  <div class="movies-grid">
+    <div class="movie-card" *ngFor="let movie of movies" (click)="navigateToDetails(movie.id)">
+      <img [src]="getMoviePoster(movie.poster_path)" [alt]="movie.title">
+      <h3>{{ movie.title }}</h3>
+      <span class="rating" [style.background-color]="getRatingColor(movie.vote_average)">
+        {{ movie.vote_average }}
+      </span>
+    </div>
+  </div>
+</section>

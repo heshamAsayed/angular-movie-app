@@ -1,0 +1,50 @@
+.group-section {
+  padding: 2rem;
+}
+
+.group-section h2 {
+  color: var(--primary-text);
+  margin-bottom: 1rem;
+}
+
+.group-section .movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.group-section .movies-grid .movie-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.group-section .movies-grid .movie-card:hover {
+  transform: scale(1.05);
+  box-shadow: var(--card-hover-shadow);
+}
+
+.group-section .movies-grid .movie-card img {
+  width: 100%;
+  display: block;
+}
+
+.group-section .movies-grid .movie-card h3 {
+  padding: 0.5rem;
+  color: var(--primary-text);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.group-section .movies-grid .movie-card .rating {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  margin: 0.5rem;
+  font-size: 0.8rem;
+  display: inline-block;
+  color: var(--primary-text);
+}
