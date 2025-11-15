@@ -46,7 +46,7 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       return;
     }
   });
-
+  
   // Load initial user from localStorage and log for debug
   const storedUser = this.authService.getCurrentUser();
   console.log('Stored User from local:', storedUser);

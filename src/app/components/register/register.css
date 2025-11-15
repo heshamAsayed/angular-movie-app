@@ -141,3 +141,44 @@
 .google-btn:hover { background: var(--card-hover-bg); border-color: var(--primary-color); box-shadow: 0 6px 18px rgba(66,133,244,0.12); transform: translateY(-2px); }
 .google-btn:active { transform: translateY(0); }
 .google-icon { width:20px; height:20px; }
+
+
+.google-btn,
+.facebook-btn {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--primary-text);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.google-btn:hover,
+.google-btn:focus {
+  background: var(--card-hover-bg);
+  border-color: var(--primary-color);
+  box-shadow: 0 6px 18px rgba(66,133,244,0.12);
+  transform: translateY(-2px);
+}
+
+.facebook-btn:hover,
+.facebook-btn:focus {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--primary-text);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(21,101,192,0.14);
+}
+
+.google-icon,
+.facebook-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+}

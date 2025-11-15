@@ -32,13 +32,13 @@ export class AuthGuard implements CanActivate {
         // Store the attempted URL for redirecting after login
         sessionStorage.setItem('redirectUrl', state.url);
 
-        // Redirect to login page
-        this.router.navigate(['/login']);
-        return false;
+        // Return UrlTree instead of navigate
+        return this.router.createUrlTree(['/login']);
       })
     );
   }
 }
+
 
 // Standalone guard function
 export const authGuard: CanActivateFn = (
@@ -50,15 +50,12 @@ export const authGuard: CanActivateFn = (
 
   return authService.isAuthenticated$.pipe(
     map((isAuthenticated) => {
-      if (isAuthenticated) {
-        return true;
-      }
+      if (isAuthenticated) return true;
 
-      // Store the attempted URL for redirecting after login
       sessionStorage.setItem('redirectUrl', state.url);
-
-      // Redirect to login page
-      return router.parseUrl('/login');
+      return router.createUrlTree(['/login']);
     })
   );
 };
+
+
