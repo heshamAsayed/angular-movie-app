@@ -3,50 +3,34 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/Authentication/auth.service';
-import { App } from '../../app'; // Assuming App is needed for isLoggedIn property
-import { GoogleAuthProvider, getRedirectResult, signInWithRedirect ,signInWithPopup} from '@angular/fire/auth';
-import { from } from 'rxjs'; // Import 'from' from 'rxjs'
-import { tap } from 'rxjs/operators'; // Import 'tap' from 'rxjs/operators'
-import { User } from '../../models/user.model'; // Import User model
-import { getDatabase, ref, set } from 'firebase/database';
+import { User } from '../../models/user.model'; 
+import { get, getDatabase, ref, set } from 'firebase/database';
 import { getApp } from 'firebase/app';
-import { FacebookAuthProvider } from 'firebase/auth';
+import { GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from '@angular/fire/auth';
+import { firstValueFrom } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { from } from 'rxjs';
+
 @Component({
   selector: 'app-login-page',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })
-export class LoginPage  {
+export class LoginPage {
   form!: FormGroup;
-
   loading = false;
   error = '';
 
   constructor(
     private fb: FormBuilder,
-    private auth: AuthService,
-    private router: Router,
-    private app: App
+    private authService: AuthService, 
+    private router: Router
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
-  }
-
-ngOnInit() {
-    getRedirectResult(this.auth.auth)
-      .then((result) => {
-        if (result?.user) {
-          // تسجيل دخول ناجح
-          this.app.isLoggedIn = true;
-          this.router.navigate(['/movies']);
-        }
-      })
-      .catch((error) => {
-        console.error('Google login error:', error);
-      });
   }
 
   submit() {
@@ -61,65 +45,42 @@ ngOnInit() {
     const email = this.form.value.email ?? '';
     const password = this.form.value.password ?? '';
 
-    this.auth.login(email, password).subscribe({
-      next: (user) => {
-        this.loading = false;
+    this.authService.login(email, password).subscribe({
+      next: async () => {
+        // انتظر currentUser$ قبل navigate
+        await firstValueFrom(this.authService.currentUser$.pipe(filter(u => !!u)));
         const redirectUrl = sessionStorage.getItem('redirectUrl') || '/Home';
         this.router.navigate([redirectUrl]);
         sessionStorage.removeItem('redirectUrl');
-        this.app.isLoggedIn = true;
       },
       error: (err) => {
         this.loading = false;
-        if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
-          this.error = 'Invalid email or password';
-        } else {
-          this.error = 'Server error, please try again';
-        }
+        this.error = err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' 
+          ? 'Invalid email or password' 
+          : 'Server error, please try again';
       },
     });
   }
 
-
-  
-   loginWithGoogle() {
+  async loginWithGoogle() {
     const provider = new GoogleAuthProvider();
-    this.loading = true; // ابدأ التحميل
-    this.error = ''; // امسح أي أخطاء سابقة
+    this.loading = true;
+    this.error = '';
 
-    from(signInWithPopup(this.auth.auth, provider).then(res => res.user))
-      .pipe(
-        tap((user: any | null) => {
-          if (user) {
-            this.app.isLoggedIn = true;
-            this.router.navigate(['/movies']);
-          }
-        })
-      ).subscribe({
-        next: (user) => {
-          this.loading = false; 
-          console.log('Google login successful:', user);
-        },
-        error: (err) => {
-          this.loading = false; // أوقف التحميل عند الخطأ
-          console.error('Google login error:', err);
-          this.error = 'Google login failed: ' + (err.message || 'Unknown error'); // اعرض الخطأ للمستخدم
-        }
-      });
-  }
+    try {
+      const res = await signInWithPopup(this.authService.auth, provider);
+      const user = res.user;
+      if (!user) throw new Error('Google login failed');
 
+      const db = getDatabase(getApp());
+      const userRef = ref(db, `users/${user.uid}`);
+      const snapshot = await get(userRef);
 
-  
-    // import { FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
-  loginWithFacebook() {
-    const provider = new FacebookAuthProvider();
-    signInWithPopup(this.auth.auth, provider) // auth.auth هو الـ Firebase Auth instance
-      .then((result) => {
-        const user = result.user;
-        if (!user) throw new Error('Facebook login failed');
-  
-        const db = getDatabase(getApp());
-        const newUser = {
+      let newUser: User;
+      if (snapshot.exists()) {
+        newUser = snapshot.val() as User;
+      } else {
+        newUser = {
           uid: user.uid,
           name: user.displayName || 'New User',
           email: user.email || '',
@@ -131,21 +92,63 @@ ngOnInit() {
           createdAt: Date.now(),
           lastLogin: Date.now(),
         };
-  
-        // حفظ المستخدم في DB
-        set(ref(db, `users/${user.uid}`), newUser);
-  
-        // تحديث الحالة في AuthService
-        // this.auth.setCurrentUser(newUser); // محتاج تعمل ميثود في AuthService لتحديث currentUser و isAuthenticated
-  
-        // حفظ في localStorage
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('currentUser', JSON.stringify(newUser));
-      })
-      .catch((err) => {
-        console.error('Facebook login error:', err);
-        this.error = 'Facebook login failed, try again';
-      });
+        await set(userRef, newUser);
+      }
+
+      this.authService.updateAuthState(newUser);
+
+      // انتظر currentUser$
+      await firstValueFrom(this.authService.currentUser$.pipe(filter(u => !!u)));
+      this.router.navigate(['/movies']);
+      this.loading = false;
+    } catch (err: any) {
+      this.loading = false;
+      this.error = 'Google login failed: ' + err.message;
+    }
   }
-  
+
+  async loginWithFacebook() {
+    const provider = new FacebookAuthProvider();
+    this.loading = true;
+    this.error = '';
+
+    try {
+      const res = await signInWithPopup(this.authService.auth, provider);
+      const user = res.user;
+      if (!user) throw new Error('Facebook login failed');
+
+      const db = getDatabase(getApp());
+      const userRef = ref(db, `users/${user.uid}`);
+      const snapshot = await get(userRef);
+
+      let newUser: User;
+      if (snapshot.exists()) {
+        newUser = snapshot.val() as User;
+      } else {
+        newUser = {
+          uid: user.uid,
+          name: user.displayName || 'New User',
+          email: user.email || '',
+          phone: user.phoneNumber || null,
+          country: null,
+          city: null,
+          profileImage: user.photoURL || null,
+          watchlist: [],
+          createdAt: Date.now(),
+          lastLogin: Date.now(),
+        };
+        await set(userRef, newUser);
+      }
+
+      this.authService.updateAuthState(newUser);
+
+      // انتظر currentUser$
+      await firstValueFrom(this.authService.currentUser$.pipe(filter(u => !!u)));
+      this.router.navigate(['/movies']);
+      this.loading = false;
+    } catch (err: any) {
+      this.loading = false;
+      this.error = 'Facebook login failed: ' + err.message;
+    }
+  }
 }

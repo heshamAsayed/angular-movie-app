@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/Authentication/auth.service';
 import { User } from '../../models/user.model';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 
 @Component({
@@ -36,29 +36,41 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
-  ngOnInit(): void {
-    // Check authentication
-    if (!this.authService.isAuthenticated()) {
+ ngOnInit(): void {
+  // Check authentication using observable
+  this.authService.isAuthenticated$.pipe(takeUntil(this.destroy$), take(1)).subscribe(isAuth => {
+    if (!isAuth) {
       this.router.navigate(['/login']);
       return;
     }
+  });
 
-    this.user.set(this.authService.getCurrentUser());
+  // Load initial user from localStorage and log for debug
+  const storedUser = this.authService.getCurrentUser();
+  console.log('Stored User from local:', storedUser);
+  this.user.set(storedUser);
 
-    this.authService.loading$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((loading) => this.isLoading.set(loading));
+  // Subscribe to observables for real-time updates
+  this.authService.currentUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+    console.log('User from observable:', user);
+    if (user && user.uid) { // Check if user is complete
+      this.user.set(user);
+    } else if (user) {
+      console.warn('User data incomplete, consider fetching from DB');
+      // Optional: Add logic to fetch full user from DB if needed
+    }
+  });
 
-    this.authService.error$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((error) => this.errorMessage.set(error));
+  this.authService.loading$.pipe(takeUntil(this.destroy$)).subscribe((loading) => {
+    this.isLoading.set(loading);
+  });
 
-    this.authService.currentUser$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((user) => this.user.set(user));
-  }
+  this.authService.error$.pipe(takeUntil(this.destroy$)).subscribe((error) => {
+    this.errorMessage.set(error);
+  });
+}
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -95,7 +107,11 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       };
 
       if (this.selectedProfileImage) {
-        updates.profileImage = this.selectedProfileImage as any;
+        // Upload the new profile image to Firebase Storage
+        const storage = getStorage();
+        const imageRef = storageRef(storage, `profile-images/${this.selectedProfileImage.name}`);
+        await uploadBytes(imageRef, this.selectedProfileImage);
+        updates.profileImage = await getDownloadURL(imageRef);
       }
 
       await this.authService.updateProfile(updates);
@@ -108,36 +124,36 @@ export class AccountInfoComponent implements OnInit, OnDestroy {
       this.errorMessage.set(error.message);
     }
   }
-async onProfileImageSelected(event: any): Promise<void> {
-  const file = event.target.files[0];
-  if (!file) return;
 
-  // Validate file type
-  if (!file.type.startsWith('image/')) {
-    this.errorMessage.set('Please select a valid image file');
-    return;
+  async onProfileImageSelected(event: any): Promise<void> {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      this.errorMessage.set('Please select a valid image file');
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      this.errorMessage.set('Image size must not exceed 5MB');
+      return;
+    }
+
+    this.selectedProfileImage = file;
+
+    // Read file as Data URL
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const dataUrl = e.target.result;
+      this.profileImagePreview.set(dataUrl);
+
+      // حفظ الصورة في localStorage (للعرض المؤقت)
+      localStorage.setItem('profileImage', dataUrl);
+    };
+    reader.readAsDataURL(file);
   }
-
-  // Validate file size (5MB max)
-  if (file.size > 5 * 1024 * 1024) {
-    this.errorMessage.set('Image size must not exceed 5MB');
-    return;
-  }
-
-  this.selectedProfileImage = file;
-
-  // Read file as Data URL
-  const reader = new FileReader();
-  reader.onload = (e: any) => {
-    const dataUrl = e.target.result;
-    this.profileImagePreview.set(dataUrl);
-
-    // حفظ الصورة في localStorage
-    localStorage.setItem('profileImage', dataUrl);
-  };
-  reader.readAsDataURL(file);
-}
-
 
   startChangingPassword(): void {
     this.isChangingPassword.set(true);
@@ -202,9 +218,8 @@ async onProfileImageSelected(event: any): Promise<void> {
     this.showConfirmPassword.update((v) => !v);
   }
 
- // component.ts
-getProfileImageFromLocalStorage(): string | null {
-  return localStorage.getItem('profileImageURL');
-}
-
+  // component.ts
+  getProfileImageFromLocalStorage(): string | null {
+    return localStorage.getItem('profileImage');
+  }
 }
