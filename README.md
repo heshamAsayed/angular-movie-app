@@ -1,4 +1,4 @@
-# Moviey Watch (Moviey Watch)
+# Movie App (Moviey Watch)
 
 [Live demo](https://heshamasayed.github.io/angular-movie-app/)
 
@@ -336,5 +336,6 @@ Other major integrations:
   - Add a quick `CONTRIBUTING.md` with developer setup instructions
 
 ---
+
 
 
