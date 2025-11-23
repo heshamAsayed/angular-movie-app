@@ -23,7 +23,7 @@
 
 ## Project Overview
 
-Moviey Watch ("Moviey Watch") is an Angular-based application that lets users browse movie information (from TMDB), watch trailers, add movies to a personal watchlist (persisted in Firebase), authenticate via Firebase, and explore movie details (cast, recommended, similar movies, providers, videos, etc.). It is designed to be responsive, accessible, and themeable (light/dark).
+Movie App("Moviey Watch") is an Angular-based application that lets users browse movie information (from TMDB), watch trailers, add movies to a personal watchlist (persisted in Firebase), authenticate via Firebase, and explore movie details (cast, recommended, similar movies, providers, videos, etc.). It is designed to be responsive, accessible, and themeable (light/dark).
 
 - Framework: Angular
 - Angular version: ^20.x (see `package.json`)
@@ -336,6 +336,7 @@ Other major integrations:
   - Add a quick `CONTRIBUTING.md` with developer setup instructions
 
 ---
+
 
 
 
